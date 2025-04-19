@@ -48,9 +48,6 @@ const authenticateAdmin = (req, res, next) => {
   }
 };
 
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, '../client/vite-project/dist')));
-
 // Routes
 app.use('/api', blogRoutes);
 app.use('/api/auth', authRoutes);
@@ -61,14 +58,8 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// The "catchall" handler: for any request that doesn't
-// match one above, send back React's index.html file.
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/vite-project/dist/index.html'));
-});
-
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/TipsDanielBlog')
+mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
     console.log('Connected to MongoDB');
     app.listen(PORT, () => {
@@ -77,7 +68,6 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/TipsDanielB
   })
   .catch(err => {
     console.error('MongoDB connection error:', err);
-    process.exit(1);
   });
 
 // Error handling middleware
