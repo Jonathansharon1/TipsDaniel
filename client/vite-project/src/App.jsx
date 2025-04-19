@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter as Router } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import HomePage from './pages/HomePage';
@@ -97,7 +97,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
+      <BrowserRouter basename="">
         <NavBar />
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -106,7 +106,7 @@ function App() {
           <Route path="/join" element={<JoinPage />} />
           <Route path="/admin" element={<AdminPage />} />
         </Routes>
-      </Router>
+      </BrowserRouter>
     </ThemeProvider>
   );
 }
