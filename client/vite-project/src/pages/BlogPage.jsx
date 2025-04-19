@@ -57,8 +57,8 @@ const BlogPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [categories, setCategories] = useState(['All']);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
@@ -90,9 +90,11 @@ const BlogPage = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        // Using environment variable for API URL
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/posts/categories`);
-        setCategories(['All', ...response.data]);
+        // Filter out empty categories and duplicates, ensure only one 'All' at the beginning
+        const filteredCategories = response.data.filter(Boolean);
+        const uniqueCategories = [...new Set(filteredCategories)].filter(cat => cat !== 'All');
+        setCategories(['All', ...uniqueCategories]);
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
@@ -112,7 +114,7 @@ const BlogPage = () => {
   const filteredPosts = posts.filter(post => {
     const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          post.content.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || post.category === selectedCategory;
+    const matchesCategory = selectedCategory === 'All' || post.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -178,7 +180,6 @@ const BlogPage = () => {
                 onChange={handleCategoryChange}
                 label="Category"
               >
-                <MenuItem value="all">All Categories</MenuItem>
                 {categories.map((category) => (
                   <MenuItem key={category} value={category}>
                     {category}
