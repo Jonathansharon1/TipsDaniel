@@ -51,18 +51,14 @@ const PostDetailPage = () => {
 
   useEffect(() => {
     const fetchPost = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        setLoading(true);
-        const response = await axios.get(`http://localhost:5000/api/blog/posts/${id}`);
-        if (response.data && response.data.post) {
-          setPost(response.data.post);
-          setError(null);
-        } else {
-          setError('Post not found');
-        }
-      } catch (err) {
-        console.error('Error fetching post:', err);
-        setError(err.response?.data?.message || 'Failed to load post. Please try again later.');
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/posts/${id}`);
+        setPost(response.data);
+      } catch (error) {
+        console.error('Error fetching post:', error);
+        setError('Failed to load post. Please try again later.');
       } finally {
         setLoading(false);
       }

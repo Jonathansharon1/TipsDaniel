@@ -112,43 +112,32 @@ const AdminPage = () => {
     }
   };
 
-  const handleCreatePost = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
     try {
-      setLoading(true);
-      setError(null);
-      
-      // Validate required fields
-      if (!title || !content) {
-        setError('Title and content are required');
-        return;
-      }
-      
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/blog/posts`,
-        {
-          title,
-          content,
-          imageUrl,
-          category,
-          author: 'Admin', // Add author field as required by the server
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Basic ${credentials}`
-          }
+      // Using environment variable for API URL
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/posts`, {
+        title,
+        content,
+        category,
+        tags: tags.split(',').map(tag => tag.trim()).filter(Boolean),
+        imageUrl
+      }, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
-      );
-      
-      // Clear form and refresh posts
+      });
+      setSuccess('Post created successfully!');
       setTitle('');
       setContent('');
-      setImageUrl('');
       setCategory('');
-      await fetchPosts();
-    } catch (err) {
-      console.error('Error creating post:', err);
-      setError(err.response?.data?.message || 'Failed to create post. Please check your credentials and try again.');
+      setTags('');
+      setImageUrl('');
+    } catch (error) {
+      console.error('Error creating post:', error);
+      setError(error.response?.data?.message || 'Failed to create post. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -311,7 +300,7 @@ const AdminPage = () => {
             <Grid item xs={12}>
               <Button
                 variant="contained"
-                onClick={handleCreatePost}
+                onClick={handleSubmit}
                 disabled={loading}
                 fullWidth
               >

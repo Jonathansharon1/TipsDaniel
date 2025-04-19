@@ -8,6 +8,7 @@ import {
   Paper
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import axios from 'axios';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -27,18 +28,29 @@ const LoginForm = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   // Get admin credentials from environment variables
   const adminUsername = import.meta.env.VITE_ADMIN_USERNAME || 'jonson';
   const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD || '3333';
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (username === adminUsername && password === adminPassword) {
+    setLoading(true);
+    setError(null);
+    try {
+      // Using environment variable for API URL
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
+        username,
+        password
+      });
+      localStorage.setItem('token', response.data.token);
       onLogin(true);
-      setError('');
-    } else {
+    } catch (error) {
+      console.error('Login error:', error);
       setError('Invalid username or password');
+    } finally {
+      setLoading(false);
     }
   };
 

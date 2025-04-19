@@ -65,23 +65,40 @@ const BlogPage = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        setLoading(true);
-        const response = await axios.get('http://localhost:5000/api/blog/posts');
-        setPosts(response.data.posts);
-        
-        // Extract unique categories from posts
-        const uniqueCategories = [...new Set(response.data.posts.map(post => post.category))];
-        setCategories(uniqueCategories);
-      } catch (err) {
-        console.error('Error fetching posts:', err);
-        setError('Failed to load blog posts. Please try again later.');
+        // Using environment variable for API URL
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/posts`, {
+          params: {
+            search: searchTerm,
+            category: selectedCategory === 'All' ? '' : selectedCategory
+          }
+        });
+        setPosts(response.data);
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+        setError('Failed to load posts. Please try again later.');
       } finally {
         setLoading(false);
       }
     };
 
     fetchPosts();
+  }, [searchTerm, selectedCategory]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        // Using environment variable for API URL
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/posts/categories`);
+        setCategories(['All', ...response.data]);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
   }, []);
 
   const handleSearch = (event) => {
