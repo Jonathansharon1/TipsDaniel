@@ -1,4 +1,5 @@
 import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import HomePage from './pages/HomePage';
@@ -96,14 +97,16 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <NavBar />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/blog" element={<BlogPage />} />
-        <Route path="/blog/:id" element={<PostDetailPage />} />
-        <Route path="/admin" element={<AdminPage />} />
-        <Route path="/join" element={<JoinPage />} />
-      </Routes>
+      <Router basename={import.meta.env.BASE_URL}>
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:id" element={<PostDetailPage />} />
+          <Route path="/join" element={<JoinPage />} />
+          <Route path="/admin" element={<AdminPage />} />
+        </Routes>
+      </Router>
     </ThemeProvider>
   );
 }
