@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import HomePage from './pages/HomePage';
@@ -95,21 +95,19 @@ const theme = createTheme({
 
 function App() {
   return (
-    <React.StrictMode>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <BrowserRouter>
-          <NavBar />
-          <Routes>
-            <Route exact path="/" element={<HomePage />} />
-            <Route path="/blog" element={<BlogPage />} />
-            <Route path="/blog/:id" element={<PostDetailPage />} />
-            <Route path="/join" element={<JoinPage />} />
-            <Route path="/admin" element={<AdminPage />} />
-          </Routes>
-        </BrowserRouter>
-      </ThemeProvider>
-    </React.StrictMode>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Router>
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:id" element={<PostDetailPage />} />
+          <Route path="/join" element={<JoinPage />} />
+          <Route path="/admin" element={<AdminPage />} />
+        </Routes>
+      </Router>
+    </ThemeProvider>
   );
 }
 
