@@ -81,9 +81,15 @@ const SearchBar = ({ onSearch, onCategoryChange }) => {
       try {
         const response = await fetch(`${import.meta.env.VITE_API_URL}/api/blog/posts/categories`);
         const data = await response.json();
-        setCategories(['All', ...data.categories]);
+        if (data.status === 'success' && Array.isArray(data.data)) {
+          setCategories(['All', ...data.data]);
+        } else {
+          console.error('Invalid categories data format:', data);
+          setCategories(['All']);
+        }
       } catch (error) {
         console.error('Error fetching categories:', error);
+        setCategories(['All']);
       }
     };
 
