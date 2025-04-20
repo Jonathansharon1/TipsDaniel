@@ -71,12 +71,23 @@ const BlogPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [categories, setCategories] = useState(['All']);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
+  // Debounce search term
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500); // Increased debounce time to 500ms for better performance
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  // Fetch posts when debounced search term or category changes
   useEffect(() => {
     const fetchPosts = async () => {
       setLoading(true);
@@ -84,7 +95,7 @@ const BlogPage = () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/blog/posts`, {
           params: {
-            search: searchTerm,
+            search: debouncedSearchTerm,
             category: selectedCategory === 'All' ? '' : selectedCategory
           }
         });
@@ -97,7 +108,7 @@ const BlogPage = () => {
     };
 
     fetchPosts();
-  }, [searchTerm, selectedCategory]);
+  }, [debouncedSearchTerm, selectedCategory]);
 
   useEffect(() => {
     const fetchCategories = async () => {

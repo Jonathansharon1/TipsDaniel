@@ -64,18 +64,48 @@ const AdminPage = () => {
   const [tags, setTags] = useState('');
   const [editingPost, setEditingPost] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const [categories] = useState(['Football', 'Basketball', 'Tennis', 'Other']);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     fetchPosts();
   }, []);
+
+  const getAuthHeader = () => {
+    const credentials = btoa(`${username}:${password}`);
+    return `Basic ${credentials}`;
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    
+    try {
+      // Test the credentials by making a request to the admin endpoint
+      await axios.get(`${import.meta.env.VITE_API_URL}/api/admin/posts`, {
+        headers: {
+          'Authorization': getAuthHeader()
+        }
+      });
+      
+      setIsLoggedIn(true);
+      setSuccess('Login successful!');
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Invalid username or password');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchPosts = async () => {
     setLoading(true);
     setError(null);
     try {
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/blog/posts`);
-      setPosts(response.data);
+      setPosts(response.data.data);
     } catch (error) {
       console.error('Error fetching posts:', error);
       setError('Failed to load posts. Please try again later.');
@@ -89,13 +119,22 @@ const AdminPage = () => {
     setLoading(true);
     setError(null);
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/blog/posts`, {
-        title,
-        content,
-        category,
-        tags: tags.split(',').map(tag => tag.trim()).filter(Boolean),
-        imageUrl
-      });
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/admin/posts`, 
+        {
+          title,
+          content,
+          category,
+          tags: tags.split(',').map(tag => tag.trim()).filter(Boolean),
+          imageUrl,
+          author: 'Admin'
+        },
+        {
+          headers: {
+            'Authorization': getAuthHeader()
+          }
+        }
+      );
       setSuccess('Post created successfully!');
       setTitle('');
       setContent('');
@@ -119,7 +158,7 @@ const AdminPage = () => {
       setError(null);
       
       await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/blog/posts/${editingPost._id}`,
+        `${import.meta.env.VITE_API_URL}/api/admin/posts/${editingPost._id}`,
         {
           title,
           content,
@@ -127,6 +166,11 @@ const AdminPage = () => {
           category,
           tags: tags.split(',').map(tag => tag.trim()).filter(Boolean),
           author: 'Admin'
+        },
+        {
+          headers: {
+            'Authorization': getAuthHeader()
+          }
         }
       );
       
@@ -151,7 +195,14 @@ const AdminPage = () => {
       setLoading(true);
       setError(null);
       
-      await axios.delete(`${import.meta.env.VITE_API_URL}/api/blog/posts/${postId}`);
+      await axios.delete(
+        `${import.meta.env.VITE_API_URL}/api/admin/posts/${postId}`,
+        {
+          headers: {
+            'Authorization': getAuthHeader()
+          }
+        }
+      );
       await fetchPosts();
     } catch (err) {
       console.error('Error deleting post:', err);
@@ -218,126 +269,148 @@ const AdminPage = () => {
           </Alert>
         )}
 
-        <StyledPaper>
-          <Typography variant="h5" sx={{ mb: 3, color: 'white' }}>
-            Create New Post
-          </Typography>
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <StyledTextField
-                fullWidth
-                label="Title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <StyledTextField
-                fullWidth
-                label="Image URL"
-                value={imageUrl}
-                onChange={(e) => setImageUrl(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormControl fullWidth>
-                <InputLabel sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>Category</InputLabel>
-                <Select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  sx={{
-                    color: 'white',
-                    '& .MuiOutlinedInput-notchedOutline': {
-                      borderColor: 'rgba(255, 255, 255, 0.23)',
-                    },
-                    '&:hover .MuiOutlinedInput-notchedOutline': {
-                      borderColor: 'rgba(255, 255, 255, 0.4)',
-                    },
-                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#2196F3',
-                    },
-                  }}
-                >
-                  {categories.map((cat) => (
-                    <MenuItem key={cat} value={cat}>{cat}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
-              <StyledTextField
-                fullWidth
-                label="Tags (comma separated)"
-                value={tags}
-                onChange={(e) => setTags(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <StyledTextField
-                fullWidth
-                label="Content"
-                multiline
-                rows={4}
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                onClick={handleSubmit}
-                disabled={loading}
-                fullWidth
-              >
-                {loading ? <CircularProgress size={24} /> : 'Create Post'}
-              </Button>
-            </Grid>
-          </Grid>
-        </StyledPaper>
-
-        <StyledPaper>
-          <Typography variant="h5" sx={{ mb: 3, color: 'white' }}>
-            Manage Posts
-          </Typography>
-          {loading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
-              <CircularProgress />
-            </Box>
-          ) : (
+        {!isLoggedIn ? (
+          <StyledPaper>
+            <Typography variant="h5" sx={{ mb: 3, color: 'white' }}>
+              Admin Login
+            </Typography>
             <Grid container spacing={3}>
-              {posts.map((post) => (
-                <Grid item xs={12} key={post._id}>
-                  <StyledPaper>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Box sx={{ flex: 1 }}>
-                        <Typography variant="h6" sx={{ color: 'white', mb: 1 }}>
-                          {post.title}
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                          Category: {post.category} • {new Date(post.createdAt).toLocaleDateString()}
-                        </Typography>
-                      </Box>
-                      <Box>
-                        <IconButton
-                          onClick={() => handleEditClick(post)}
-                          sx={{ color: '#2196F3', mr: 1 }}
-                        >
-                          <EditIcon />
-                        </IconButton>
-                        <IconButton
-                          onClick={() => handleDeletePost(post._id)}
-                          sx={{ color: '#f44336' }}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </Box>
-                    </Box>
-                  </StyledPaper>
-                </Grid>
-              ))}
+              <Grid item xs={12}>
+                <StyledTextField
+                  fullWidth
+                  label="Username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <StyledTextField
+                  fullWidth
+                  label="Password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  onClick={handleLogin}
+                  disabled={loading}
+                  fullWidth
+                >
+                  {loading ? <CircularProgress size={24} /> : 'Login'}
+                </Button>
+              </Grid>
             </Grid>
-          )}
-        </StyledPaper>
+          </StyledPaper>
+        ) : (
+          <>
+            <StyledPaper>
+              <Typography variant="h5" sx={{ mb: 3, color: 'white' }}>
+                Create New Post
+              </Typography>
+              <Grid container spacing={3}>
+                <Grid item xs={12}>
+                  <StyledTextField
+                    fullWidth
+                    label="Title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <StyledTextField
+                    fullWidth
+                    label="Image URL"
+                    value={imageUrl}
+                    onChange={(e) => setImageUrl(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <StyledTextField
+                    fullWidth
+                    label="Category"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <StyledTextField
+                    fullWidth
+                    label="Tags (comma separated)"
+                    value={tags}
+                    onChange={(e) => setTags(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <StyledTextField
+                    fullWidth
+                    label="Content"
+                    multiline
+                    rows={4}
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button
+                    variant="contained"
+                    onClick={handleSubmit}
+                    disabled={loading}
+                    fullWidth
+                  >
+                    {loading ? <CircularProgress size={24} /> : 'Create Post'}
+                  </Button>
+                </Grid>
+              </Grid>
+            </StyledPaper>
+
+            <StyledPaper>
+              <Typography variant="h5" sx={{ mb: 3, color: 'white' }}>
+                Manage Posts
+              </Typography>
+              {loading ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
+                  <CircularProgress />
+                </Box>
+              ) : (
+                <Grid container spacing={3}>
+                  {posts.map((post) => (
+                    <Grid item xs={12} key={post._id}>
+                      <StyledPaper>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <Box sx={{ flex: 1 }}>
+                            <Typography variant="h6" sx={{ color: 'white', mb: 1 }}>
+                              {post.title}
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                              Category: {post.category} • {new Date(post.createdAt).toLocaleDateString()}
+                            </Typography>
+                          </Box>
+                          <Box>
+                            <IconButton
+                              onClick={() => handleEditClick(post)}
+                              sx={{ color: '#2196F3', mr: 1 }}
+                            >
+                              <EditIcon />
+                            </IconButton>
+                            <IconButton
+                              onClick={() => handleDeletePost(post._id)}
+                              sx={{ color: '#f44336' }}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </Box>
+                        </Box>
+                      </StyledPaper>
+                    </Grid>
+                  ))}
+                </Grid>
+              )}
+            </StyledPaper>
+          </>
+        )}
 
         <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
           <DialogTitle>Edit Post</DialogTitle>
@@ -360,17 +433,12 @@ const AdminPage = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <FormControl fullWidth>
-                  <InputLabel>Category</InputLabel>
-                  <Select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                  >
-                    {categories.map((cat) => (
-                      <MenuItem key={cat} value={cat}>{cat}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                <TextField
+                  fullWidth
+                  label="Category"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                />
               </Grid>
               <Grid item xs={12}>
                 <TextField

@@ -451,9 +451,9 @@ function HomePage() {
       try {
         setLoading(true);
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/blog/posts`);
-        // Get only the latest 3 posts from the database
-        const dbPosts = response.data.filter(post => post._id); // Only show posts with an _id (from DB)
-        setLatestPosts(dbPosts.slice(0, 3));
+        // Get only the latest 2 posts from the database
+        const dbPosts = response.data.data.filter(post => post._id); // Only show posts with an _id (from DB)
+        setLatestPosts(dbPosts.slice(0, 2));
       } catch (err) {
         console.error('Error fetching latest posts:', err);
         setError('Failed to load latest blog posts');

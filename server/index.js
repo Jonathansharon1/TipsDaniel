@@ -4,6 +4,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import blogRouter from './routes/blog.js';
 import authRouter from './routes/auth.js';
+import adminRouter from './routes/admin.js';
+import config from './config.js';
 
 // Load environment variables
 dotenv.config();
@@ -11,43 +13,47 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
 app.use(express.json());
+app.use(cors({
+  origin: config.corsOrigin,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
+  maxAge: 86400 // 24 hours
+}));
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI)
+mongoose.connect(config.mongoURI)
   .then(() => {
     console.log('Connected to MongoDB Atlas');
   })
   .catch(err => {
     console.error('MongoDB connection error:', err.message);
-    process.exit(1); // Exit if we can't connect to the database
+    process.exit(1);
   });
 
 // Routes
 app.use('/api/blog', blogRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/admin', adminRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  // Log the full error for debugging
-  console.error(err.stack);
+  console.error('Error:', err.message);
   
-  // Send a sanitized error message to the client
   const statusCode = err.statusCode || 500;
-  const message = process.env.NODE_ENV === 'production' 
+  const message = config.nodeEnv === 'production' 
     ? 'An error occurred' 
     : err.message;
     
   res.status(statusCode).json({ 
     status: 'error',
     message,
-    ...(process.env.NODE_ENV !== 'production' && { stack: err.stack })
+    ...(config.nodeEnv !== 'production' && { stack: err.stack })
   });
 });
 
 // Start server
-const PORT = process.env.PORT || 5000;
+const PORT = config.port;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT} in ${process.env.NODE_ENV} mode`);
+  console.log(`Server is running on port ${PORT} in ${config.nodeEnv} mode`);
 }); 

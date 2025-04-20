@@ -4,6 +4,16 @@ import auth from '../middleware/auth.js';
 
 const router = express.Router();
 
+// Get all posts (protected route)
+router.get('/posts', auth, async (req, res) => {
+  try {
+    const posts = await BlogPost.find().sort({ createdAt: -1 });
+    res.json(posts);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching posts', error: error.message });
+  }
+});
+
 // Create a new post (protected route)
 router.post('/posts', auth, async (req, res) => {
   try {
