@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import {
-  Box,
+  Paper,
   TextField,
   Button,
   Typography,
-  Alert,
-  Paper
+  Box,
+  Container,
+  Alert
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
@@ -15,37 +16,35 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  background: 'rgba(255, 255, 255, 0.05)',
-  backdropFilter: 'blur(10px)',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
-  borderRadius: '15px',
-  maxWidth: '400px',
-  width: '100%',
+  gap: theme.spacing(2),
+  maxWidth: 400,
   margin: '0 auto',
+  marginTop: theme.spacing(8),
+  backgroundColor: theme.palette.background.paper,
+  borderRadius: theme.spacing(2),
+  boxShadow: theme.shadows[10]
 }));
 
-const LoginForm = ({ onLogin }) => {
+const LoginForm = ({ onLoginSuccess }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Get admin credentials from environment variables
-  const adminUsername = import.meta.env.VITE_ADMIN_USERNAME || 'jonson';
-  const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD || '3333';
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
+    setError('');
+    
     try {
-      // Using environment variable for API URL
       const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
         username,
         password
       });
-      localStorage.setItem('token', response.data.token);
-      onLogin(true);
+
+      const { token } = response.data;
+      localStorage.setItem('token', token);
+      onLoginSuccess(true);
     } catch (error) {
       console.error('Login error:', error);
       setError('Invalid username or password');
@@ -55,62 +54,48 @@ const LoginForm = ({ onLogin }) => {
   };
 
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 2,
-      }}
-    >
+    <Container maxWidth="sm">
       <StyledPaper elevation={3}>
-        <Typography variant="h4" component="h1" gutterBottom>
+        <Typography variant="h5" component="h1" gutterBottom>
           Admin Login
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3, width: '100%' }}>
-          {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {error}
-            </Alert>
-          )}
+        {error && (
+          <Alert severity="error" sx={{ width: '100%' }}>
+            {error}
+          </Alert>
+        )}
+        <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
           <TextField
+            margin="normal"
+            required
             fullWidth
             label="Username"
-            variant="outlined"
-            margin="normal"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            required
+            disabled={loading}
           />
           <TextField
+            margin="normal"
+            required
             fullWidth
             label="Password"
             type="password"
-            variant="outlined"
-            margin="normal"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
+            disabled={loading}
           />
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            sx={{
-              mt: 3,
-              mb: 2,
-              background: 'linear-gradient(45deg, #00B4D8 30%, #48CAE4 90%)',
-              '&:hover': {
-                background: 'linear-gradient(45deg, #0096c7 30%, #00B4D8 90%)',
-              },
-            }}
+            sx={{ mt: 3, mb: 2 }}
+            disabled={loading}
           >
-            Login
+            {loading ? 'Logging in...' : 'Login'}
           </Button>
         </Box>
       </StyledPaper>
-    </Box>
+    </Container>
   );
 };
 

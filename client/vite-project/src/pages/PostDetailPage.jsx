@@ -54,7 +54,7 @@ const PostDetailPage = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/posts/${id}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/blog/posts/${id}`);
         setPost(response.data);
       } catch (error) {
         console.error('Error fetching post:', error);

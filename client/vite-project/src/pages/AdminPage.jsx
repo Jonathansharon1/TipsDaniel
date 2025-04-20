@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Container,
@@ -18,18 +17,11 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow
+  MenuItem
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material';
 import axios from 'axios';
-import LoginForm from '../components/LoginForm';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   background: 'rgba(10, 25, 41, 0.7)',
@@ -61,52 +53,32 @@ const StyledTextField = styled(TextField)({
 });
 
 const AdminPage = () => {
-  const navigate = useNavigate();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [category, setCategory] = useState('');
+  const [tags, setTags] = useState('');
   const [editingPost, setEditingPost] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [categories, setCategories] = useState(['Football', 'Basketball', 'Tennis', 'Other']);
-  const [formData, setFormData] = useState({
-    title: '',
-    content: '',
-    category: '',
-    tags: '',
-    imageUrl: ''
-  });
-
-  // Get admin credentials from environment variables
-  const adminUsername = import.meta.env.VITE_ADMIN_USERNAME;
-  const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD;
-  
-  // Create Base64 encoded credentials
-  const credentials = btoa(`${adminUsername}:${adminPassword}`);
+  const [categories] = useState(['Football', 'Basketball', 'Tennis', 'Other']);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      fetchPosts();
-    }
-  }, [isAuthenticated]);
-
-  const handleLogin = (success) => {
-    setIsAuthenticated(success);
-  };
+    fetchPosts();
+  }, []);
 
   const fetchPosts = async () => {
+    setLoading(true);
+    setError(null);
     try {
-      setLoading(true);
-      setError(null);
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/blog/posts`);
-      setPosts(response.data.posts || []);
-    } catch (err) {
-      console.error('Error fetching posts:', err);
-      setError('Failed to load posts: ' + err.message);
+      setPosts(response.data);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      setError('Failed to load posts. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -117,17 +89,12 @@ const AdminPage = () => {
     setLoading(true);
     setError(null);
     try {
-      // Using environment variable for API URL
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/posts`, {
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/blog/posts`, {
         title,
         content,
         category,
         tags: tags.split(',').map(tag => tag.trim()).filter(Boolean),
         imageUrl
-      }, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
       });
       setSuccess('Post created successfully!');
       setTitle('');
@@ -135,6 +102,7 @@ const AdminPage = () => {
       setCategory('');
       setTags('');
       setImageUrl('');
+      fetchPosts();
     } catch (error) {
       console.error('Error creating post:', error);
       setError(error.response?.data?.message || 'Failed to create post. Please try again.');
@@ -150,20 +118,15 @@ const AdminPage = () => {
       setLoading(true);
       setError(null);
       
-      const response = await axios.put(
+      await axios.put(
         `${import.meta.env.VITE_API_URL}/api/blog/posts/${editingPost._id}`,
         {
           title,
           content,
           imageUrl,
           category,
-          author: 'Admin', // Add author field as required by the server
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Basic ${credentials}`
-          }
+          tags: tags.split(',').map(tag => tag.trim()).filter(Boolean),
+          author: 'Admin'
         }
       );
       
@@ -172,11 +135,12 @@ const AdminPage = () => {
       setContent('');
       setImageUrl('');
       setCategory('');
+      setTags('');
       setOpenDialog(false);
       await fetchPosts();
     } catch (err) {
       console.error('Error updating post:', err);
-      setError(err.response?.data?.message || 'Failed to update post. Please check your credentials and try again.');
+      setError(err.response?.data?.message || 'Failed to update post.');
     } finally {
       setLoading(false);
     }
@@ -187,19 +151,11 @@ const AdminPage = () => {
       setLoading(true);
       setError(null);
       
-      await axios.delete(
-        `${import.meta.env.VITE_API_URL}/api/blog/posts/${postId}`,
-        {
-          headers: {
-            'Authorization': `Basic ${credentials}`
-          }
-        }
-      );
-      
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/blog/posts/${postId}`);
       await fetchPosts();
     } catch (err) {
       console.error('Error deleting post:', err);
-      setError(err.response?.data?.message || 'Failed to delete post. Please check your credentials and try again.');
+      setError(err.response?.data?.message || 'Failed to delete post.');
     } finally {
       setLoading(false);
     }
@@ -211,6 +167,7 @@ const AdminPage = () => {
     setContent(post.content);
     setImageUrl(post.imageUrl || '');
     setCategory(post.category || '');
+    setTags(post.tags ? post.tags.join(', ') : '');
     setOpenDialog(true);
   };
 
@@ -221,11 +178,8 @@ const AdminPage = () => {
     setContent('');
     setImageUrl('');
     setCategory('');
+    setTags('');
   };
-
-  if (!isAuthenticated) {
-    return <LoginForm onLogin={handleLogin} />;
-  }
 
   return (
     <Box
@@ -258,6 +212,12 @@ const AdminPage = () => {
           </Alert>
         )}
 
+        {success && (
+          <Alert severity="success" sx={{ mb: 4 }}>
+            {success}
+          </Alert>
+        )}
+
         <StyledPaper>
           <Typography variant="h5" sx={{ mb: 3, color: 'white' }}>
             Create New Post
@@ -280,11 +240,36 @@ const AdminPage = () => {
               />
             </Grid>
             <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>Category</InputLabel>
+                <Select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  sx={{
+                    color: 'white',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'rgba(255, 255, 255, 0.23)',
+                    },
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'rgba(255, 255, 255, 0.4)',
+                    },
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: '#2196F3',
+                    },
+                  }}
+                >
+                  {categories.map((cat) => (
+                    <MenuItem key={cat} value={cat}>{cat}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
               <StyledTextField
                 fullWidth
-                label="Category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                label="Tags (comma separated)"
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -324,9 +309,14 @@ const AdminPage = () => {
                 <Grid item xs={12} key={post._id}>
                   <StyledPaper>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Typography variant="h6" sx={{ color: 'white' }}>
-                        {post.title}
-                      </Typography>
+                      <Box sx={{ flex: 1 }}>
+                        <Typography variant="h6" sx={{ color: 'white', mb: 1 }}>
+                          {post.title}
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                          Category: {post.category} • {new Date(post.createdAt).toLocaleDateString()}
+                        </Typography>
+                      </Box>
                       <Box>
                         <IconButton
                           onClick={() => handleEditClick(post)}
@@ -370,15 +360,28 @@ const AdminPage = () => {
                 />
               </Grid>
               <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel>Category</InputLabel>
+                  <Select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                  >
+                    {categories.map((cat) => (
+                      <MenuItem key={cat} value={cat}>{cat}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Category"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
+                  label="Tags (comma separated)"
+                  value={tags}
+                  onChange={(e) => setTags(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
-                <StyledTextField
+                <TextField
                   fullWidth
                   label="Content"
                   multiline

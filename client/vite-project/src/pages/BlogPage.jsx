@@ -37,9 +37,20 @@ const StyledCard = styled(Card)(({ theme }) => ({
   '&:hover': {
     transform: 'translateY(-5px)',
     boxShadow: '0 10px 20px rgba(0, 0, 0, 0.2)',
+    '& .MuiCardMedia-root': {
+      transform: 'scale(1.05)',
+    }
   },
   [theme.breakpoints.down('sm')]: {
     borderRadius: '10px',
+  },
+}));
+
+const StyledCardMedia = styled(CardMedia)(({ theme }) => ({
+  height: 250,
+  transition: 'transform 0.3s ease-in-out',
+  [theme.breakpoints.down('sm')]: {
+    height: 200,
   },
 }));
 
@@ -49,6 +60,9 @@ const StyledChip = styled(Chip)(({ theme }) => ({
   color: 'white',
   fontSize: theme.breakpoints.down('sm') ? '0.7rem' : '0.875rem',
   height: theme.breakpoints.down('sm') ? '24px' : '32px',
+  '&:hover': {
+    background: 'rgba(255, 255, 255, 0.2)',
+  }
 }));
 
 const BlogPage = () => {
@@ -68,8 +82,7 @@ const BlogPage = () => {
       setLoading(true);
       setError(null);
       try {
-        // Using environment variable for API URL
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/posts`, {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/blog/posts`, {
           params: {
             search: searchTerm,
             category: selectedCategory === 'All' ? '' : selectedCategory
@@ -77,7 +90,6 @@ const BlogPage = () => {
         });
         setPosts(response.data);
       } catch (error) {
-        console.error('Error fetching posts:', error);
         setError('Failed to load posts. Please try again later.');
       } finally {
         setLoading(false);
@@ -90,13 +102,12 @@ const BlogPage = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/posts/categories`);
-        // Filter out empty categories and duplicates, ensure only one 'All' at the beginning
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/blog/posts/categories`);
         const filteredCategories = response.data.filter(Boolean);
         const uniqueCategories = [...new Set(filteredCategories)].filter(cat => cat !== 'All');
         setCategories(['All', ...uniqueCategories]);
       } catch (error) {
-        console.error('Error fetching categories:', error);
+        setError('Failed to load categories. Please try again later.');
       }
     };
 
@@ -147,7 +158,11 @@ const BlogPage = () => {
         align="center" 
         sx={{ 
           mb: { xs: 4, sm: 5, md: 6 },
-          fontSize: { xs: '1.75rem', sm: '2.25rem', md: '3rem' }
+          fontSize: { xs: '1.75rem', sm: '2.25rem', md: '3rem' },
+          background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          fontWeight: 700
         }}
       >
         Blog
@@ -168,6 +183,20 @@ const BlogPage = () => {
                     <Search />
                   </InputAdornment>
                 ),
+                sx: {
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: '10px',
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                  },
+                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                  },
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#2196F3',
+                  },
+                }
               }}
               size={isMobile ? "small" : "medium"}
             />
@@ -179,6 +208,20 @@ const BlogPage = () => {
                 value={selectedCategory}
                 onChange={handleCategoryChange}
                 label="Category"
+                sx={{
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: '10px',
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                  },
+                  '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                  },
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: '#2196F3',
+                  },
+                }}
               >
                 {categories.map((category) => (
                   <MenuItem key={category} value={category}>
@@ -191,19 +234,28 @@ const BlogPage = () => {
         </Grid>
       </Box>
 
-      {filteredPosts.length === 0 ? (
-        <Alert severity="info" sx={{ mb: 4 }}>
-          No posts found matching your criteria.
-        </Alert>
+      {loading ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+          <CircularProgress />
+        </Box>
+      ) : error ? (
+        <Container maxWidth="lg" sx={{ mt: 4, px: 2 }}>
+          <Alert severity="error">{error}</Alert>
+        </Container>
+      ) : filteredPosts.length === 0 ? (
+        <Box sx={{ textAlign: 'center', mt: 4 }}>
+          <Typography variant="h6" color="text.secondary">
+            No posts found matching your criteria
+          </Typography>
+        </Box>
       ) : (
         <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
           {filteredPosts.map((post) => (
             <Grid item key={post._id} xs={12} sm={6} md={4}>
               <StyledCard>
                 {post.imageUrl && (
-                  <CardMedia
+                  <StyledCardMedia
                     component="img"
-                    height={isMobile ? "160" : "200"}
                     image={post.imageUrl}
                     alt={post.title}
                   />
@@ -215,7 +267,9 @@ const BlogPage = () => {
                     gutterBottom
                     sx={{ 
                       fontSize: { xs: '1rem', sm: '1.25rem', md: '1.5rem' },
-                      lineHeight: 1.2
+                      lineHeight: 1.2,
+                      fontWeight: 600,
+                      color: 'white'
                     }}
                   >
                     {post.title}
@@ -226,7 +280,8 @@ const BlogPage = () => {
                     paragraph
                     sx={{ 
                       fontSize: { xs: '0.75rem', sm: '0.875rem' },
-                      mb: 2
+                      mb: 2,
+                      color: 'rgba(255, 255, 255, 0.7)'
                     }}
                   >
                     {post.content.substring(0, isMobile ? 80 : 150)}...
@@ -240,6 +295,14 @@ const BlogPage = () => {
                     onClick={() => handleReadMore(post._id)} 
                     showArrow
                     size={isMobile ? "small" : "medium"}
+                    sx={{
+                      mt: 'auto',
+                      background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+                      color: 'white',
+                      '&:hover': {
+                        background: 'linear-gradient(45deg, #1976D2 30%, #1E88E5 90%)',
+                      }
+                    }}
                   >
                     Read More
                   </Button>

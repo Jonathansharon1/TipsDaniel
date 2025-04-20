@@ -450,8 +450,10 @@ function HomePage() {
     const fetchLatestPosts = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:5000/api/blog/posts');
-        setLatestPosts(response.data.posts);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/blog/posts`);
+        // Get only the latest 3 posts from the database
+        const dbPosts = response.data.filter(post => post._id); // Only show posts with an _id (from DB)
+        setLatestPosts(dbPosts.slice(0, 3));
       } catch (err) {
         console.error('Error fetching latest posts:', err);
         setError('Failed to load latest blog posts');
@@ -1215,7 +1217,6 @@ function HomePage() {
             color: 'primary.main',
             fontSize: { xs: '2rem', md: '2.5rem' },
             fontWeight: 700,
-            letterSpacing: '-0.02em',
             position: 'relative',
             '&::after': {
               content: '""',
@@ -1252,30 +1253,59 @@ function HomePage() {
                         sx={{
                           objectFit: 'cover',
                           borderRadius: '8px',
-                          mb: 2
+                          mb: 2,
+                          transition: 'transform 0.3s ease-in-out',
+                          '&:hover': {
+                            transform: 'scale(1.05)'
+                          }
                         }}
                       />
                     )}
                     <CardContent>
-                      <Typography variant="h6" gutterBottom>
+                      <Typography 
+                        variant="h6" 
+                        gutterBottom
+                        sx={{
+                          color: 'white',
+                          fontWeight: 600,
+                          fontSize: { xs: '1.1rem', sm: '1.25rem' },
+                          mb: 2
+                        }}
+                      >
                         {post.title}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                      <Typography 
+                        variant="body2" 
+                        sx={{ 
+                          color: 'rgba(255, 255, 255, 0.7)',
+                          mb: 2,
+                          fontSize: { xs: '0.875rem', sm: '1rem' }
+                        }}
+                      >
                         {post.content.substring(0, 150)}...
                       </Typography>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
                         <Chip 
                           label={post.category} 
                           size="small" 
                           sx={{ 
                             background: 'rgba(0, 180, 216, 0.1)',
-                            color: 'primary.light'
+                            color: 'primary.light',
+                            '&:hover': {
+                              background: 'rgba(0, 180, 216, 0.2)'
+                            }
                           }} 
                         />
                         <CustomButton
                           variant="text"
                           onClick={() => handleReadMore(post._id)}
                           endIcon={<ArrowForward />}
+                          sx={{
+                            color: 'primary.light',
+                            '&:hover': {
+                              background: 'rgba(0, 180, 216, 0.1)'
+                            }
+                          }}
                         >
                           Read More
                         </CustomButton>
@@ -1288,20 +1318,19 @@ function HomePage() {
           )}
           
           <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>
-            <GlowingButtonWrapper
-              variants={buttonVariants}
-              initial="hidden"
-              animate="visible"
-              whileHover="hover"
-              whileTap="tap"
+            <CustomButton
+              onClick={handleBlogClick}
+              showArrow
+              sx={{
+                background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+                color: 'white',
+                '&:hover': {
+                  background: 'linear-gradient(45deg, #1976D2 30%, #1E88E5 90%)',
+                }
+              }}
             >
-              <CustomButton 
-                onClick={handleBlogClick}
-                showArrow={true}
-              >
-                View All Blog Posts
-              </CustomButton>
-            </GlowingButtonWrapper>
+              View All Blog Posts
+            </CustomButton>
           </Box>
         </Container>
       </Box>

@@ -1,77 +1,53 @@
-import 'dotenv/config';
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+import blogRouter from './routes/blog.js';
+import authRouter from './routes/auth.js';
 
-// Get the directory name using ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Import routes
-import blogRoutes from './routes/blog.js';
-import authRoutes from './routes/auth.js';
-import adminRoutes from './routes/admin.js';
+// Load environment variables
+dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors({
-  origin: ['https://tipsdaniel-client-static.onrender.com', 'http://localhost:5173'],
-  credentials: true
-}));
+app.use(cors());
 app.use(express.json());
-
-// Basic Authentication Middleware
-const authenticateAdmin = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  
-  if (!authHeader || !authHeader.startsWith('Basic ')) {
-    return res.status(401).json({ message: 'Authentication required' });
-  }
-  
-  try {
-    const base64Credentials = authHeader.split(' ')[1];
-    const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
-    const [username, password] = credentials.split(':');
-    
-    if (username === process.env.ADMIN_USERNAME && 
-        password === process.env.ADMIN_PASSWORD) {
-      next();
-    } else {
-      res.status(401).json({ message: 'Invalid credentials' });
-    }
-  } catch (error) {
-    res.status(401).json({ message: 'Invalid authentication format' });
-  }
-};
-
-// Routes
-app.use('/api', blogRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/admin', adminRoutes);
-
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
-});
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
-    console.log('Connected to MongoDB');
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
+    console.log('Connected to MongoDB Atlas');
   })
   .catch(err => {
-    console.error('MongoDB connection error:', err);
+    console.error('MongoDB connection error:', err.message);
+    process.exit(1); // Exit if we can't connect to the database
   });
+
+// Routes
+app.use('/api/blog', blogRouter);
+app.use('/api/auth', authRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
+  // Log the full error for debugging
   console.error(err.stack);
-  res.status(500).json({ message: 'Something went wrong!' });
+  
+  // Send a sanitized error message to the client
+  const statusCode = err.statusCode || 500;
+  const message = process.env.NODE_ENV === 'production' 
+    ? 'An error occurred' 
+    : err.message;
+    
+  res.status(statusCode).json({ 
+    status: 'error',
+    message,
+    ...(process.env.NODE_ENV !== 'production' && { stack: err.stack })
+  });
+});
+
+// Start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT} in ${process.env.NODE_ENV} mode`);
 }); 

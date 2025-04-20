@@ -1,15 +1,11 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const PostSchema = new mongoose.Schema({
+const postSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true
   },
   content: {
-    type: String,
-    required: true
-  },
-  author: {
     type: String,
     required: true
   },
@@ -19,12 +15,15 @@ const PostSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    required: true,
-    enum: ['Football', 'Basketball', 'Tennis', 'Other']
+    default: 'Other'
   },
   tags: {
     type: [String],
     default: []
+  },
+  author: {
+    type: String,
+    default: 'Admin'
   },
   createdAt: {
     type: Date,
@@ -36,10 +35,10 @@ const PostSchema = new mongoose.Schema({
   }
 });
 
-// Update the updatedAt field before saving
-PostSchema.pre('save', function(next) {
+// Update the updatedAt timestamp before saving
+postSchema.pre('save', function(next) {
   this.updatedAt = Date.now();
   next();
 });
 
-module.exports = mongoose.model('Post', PostSchema); 
+export default mongoose.model('Post', postSchema); 
