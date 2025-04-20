@@ -88,7 +88,7 @@ const BlogPage = () => {
             category: selectedCategory === 'All' ? '' : selectedCategory
           }
         });
-        setPosts(response.data);
+        setPosts(response.data.data);
       } catch (error) {
         setError('Failed to load posts. Please try again later.');
       } finally {
@@ -103,7 +103,7 @@ const BlogPage = () => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/blog/posts/categories`);
-        const filteredCategories = response.data.filter(Boolean);
+        const filteredCategories = response.data.data.filter(Boolean);
         const uniqueCategories = [...new Set(filteredCategories)].filter(cat => cat !== 'All');
         setCategories(['All', ...uniqueCategories]);
       } catch (error) {
