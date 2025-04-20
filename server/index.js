@@ -15,7 +15,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: config.corsOrigin,
+  origin: [config.corsOrigin, 'https://tipsdaniel.onrender.com'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
   maxAge: 86400 // 24 hours
