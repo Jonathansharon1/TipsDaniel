@@ -15,7 +15,12 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: ['https://tipsdaniel-client-static.onrender.com', 'https://tipsdaniel.onrender.com'],
+  origin: [
+    'https://tipsdaniel-client-static.onrender.com', 
+    'https://tipsdaniel.onrender.com',
+    'http://localhost:5173',  // Add this for local development
+    'http://localhost:3000'   // Add this for local development
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
   maxAge: 86400 // 24 hours

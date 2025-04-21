@@ -17,7 +17,8 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
+  LinearProgress
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material';
@@ -64,13 +65,21 @@ const AdminPage = () => {
   const [tags, setTags] = useState('');
   const [editingPost, setEditingPost] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState(import.meta.env.VITE_ADMIN_USERNAME || '');
+  const [password, setPassword] = useState(import.meta.env.VITE_ADMIN_PASSWORD || '');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedSecondImage, setSelectedSecondImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
+  const [secondImagePreview, setSecondImagePreview] = useState('');
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [secondImageUploadProgress, setSecondImageUploadProgress] = useState(0);
 
   useEffect(() => {
-    fetchPosts();
-  }, []);
+    if (isLoggedIn) {
+      fetchPosts();
+    }
+  }, [isLoggedIn]);
 
   const getAuthHeader = () => {
     const credentials = btoa(`${username}:${password}`);
@@ -101,10 +110,19 @@ const AdminPage = () => {
   };
 
   const fetchPosts = async () => {
+    if (!isLoggedIn) return;
+    
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/blog/posts`);
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/admin/posts`,
+        {
+          headers: {
+            'Authorization': getAuthHeader()
+          }
+        }
+      );
       setPosts(response.data.data);
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -114,19 +132,100 @@ const AdminPage = () => {
     }
   };
 
+  const handleImageChange = (event, isSecondImage = false) => {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        setError('Image size should be less than 5MB');
+        return;
+      }
+      if (isSecondImage) {
+        setSelectedSecondImage(file);
+        setSecondImagePreview(URL.createObjectURL(file));
+      } else {
+        setSelectedImage(file);
+        setImagePreview(URL.createObjectURL(file));
+      }
+      setError(null);
+    }
+  };
+
+  const insertImageAfterParagraphs = (content, imageUrl) => {
+    const paragraphs = content.split('\n\n');
+    if (paragraphs.length >= 2) {
+      paragraphs.splice(2, 0, `\n![Content Image](${imageUrl})\n`);
+      return paragraphs.join('\n\n');
+    }
+    return content;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setSuccess(null);
+
     try {
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/admin/posts`, 
+      let finalImageUrl = '';
+      let finalSecondImageUrl = '';
+      
+      if (selectedImage) {
+        const formData = new FormData();
+        formData.append('image', selectedImage);
+        
+        const uploadResponse = await axios.post(`${import.meta.env.VITE_API_URL}/api/admin/upload`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': getAuthHeader()
+          },
+          onUploadProgress: (progressEvent) => {
+            const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            setUploadProgress(progress);
+          }
+        });
+        
+        if (uploadResponse.data.status === 'success') {
+          finalImageUrl = uploadResponse.data.data.url;
+        } else {
+          throw new Error('Failed to upload main image');
+        }
+      }
+
+      if (selectedSecondImage) {
+        const formData = new FormData();
+        formData.append('image', selectedSecondImage);
+        
+        const uploadResponse = await axios.post(`${import.meta.env.VITE_API_URL}/api/admin/upload`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': getAuthHeader()
+          },
+          onUploadProgress: (progressEvent) => {
+            const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            setSecondImageUploadProgress(progress);
+          }
+        });
+        
+        if (uploadResponse.data.status === 'success') {
+          finalSecondImageUrl = uploadResponse.data.data.url;
+        } else {
+          throw new Error('Failed to upload second image');
+        }
+      }
+
+      let finalContent = content;
+      if (finalSecondImageUrl) {
+        finalContent = insertImageAfterParagraphs(content, finalSecondImageUrl);
+      }
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/admin/posts`,
         {
           title,
-          content,
+          content: finalContent,
           category,
           tags: tags.split(',').map(tag => tag.trim()).filter(Boolean),
-          imageUrl,
+          imageUrl: finalImageUrl,
           author: 'Admin'
         },
         {
@@ -135,16 +234,25 @@ const AdminPage = () => {
           }
         }
       );
+
+      setPosts([response.data.data, ...posts]);
       setSuccess('Post created successfully!');
       setTitle('');
       setContent('');
       setCategory('');
       setTags('');
-      setImageUrl('');
+      setSelectedImage(null);
+      setSelectedSecondImage(null);
+      setImagePreview('');
+      setSecondImagePreview('');
+      setUploadProgress(0);
+      setSecondImageUploadProgress(0);
       fetchPosts();
-    } catch (error) {
-      console.error('Error creating post:', error);
-      setError(error.response?.data?.message || 'Failed to create post. Please try again.');
+    } catch (err) {
+      console.error('Error creating post:', err);
+      setError(err.response?.data?.message || 'Failed to create post');
+      setUploadProgress(0);
+      setSecondImageUploadProgress(0);
     } finally {
       setLoading(false);
     }
@@ -157,12 +265,64 @@ const AdminPage = () => {
       setLoading(true);
       setError(null);
       
+      let finalImageUrl = editingPost.imageUrl;
+      let finalSecondImageUrl = '';
+      let finalContent = content;
+      
+      if (selectedImage) {
+        const formData = new FormData();
+        formData.append('image', selectedImage);
+        
+        const uploadResponse = await axios.post(`${import.meta.env.VITE_API_URL}/api/admin/upload`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': getAuthHeader()
+          },
+          onUploadProgress: (progressEvent) => {
+            const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            setUploadProgress(progress);
+          }
+        });
+        
+        if (uploadResponse.data.status === 'success') {
+          finalImageUrl = uploadResponse.data.data.url;
+        } else {
+          throw new Error('Failed to upload main image');
+        }
+      }
+
+      if (selectedSecondImage) {
+        const formData = new FormData();
+        formData.append('image', selectedSecondImage);
+        
+        const uploadResponse = await axios.post(`${import.meta.env.VITE_API_URL}/api/admin/upload`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            'Authorization': getAuthHeader()
+          },
+          onUploadProgress: (progressEvent) => {
+            const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            setSecondImageUploadProgress(progress);
+          }
+        });
+        
+        if (uploadResponse.data.status === 'success') {
+          finalSecondImageUrl = uploadResponse.data.data.url;
+        } else {
+          throw new Error('Failed to upload second image');
+        }
+      }
+
+      if (finalSecondImageUrl) {
+        finalContent = insertImageAfterParagraphs(content, finalSecondImageUrl);
+      }
+      
       await axios.put(
         `${import.meta.env.VITE_API_URL}/api/admin/posts/${editingPost._id}`,
         {
           title,
-          content,
-          imageUrl,
+          content: finalContent,
+          imageUrl: finalImageUrl,
           category,
           tags: tags.split(',').map(tag => tag.trim()).filter(Boolean),
           author: 'Admin'
@@ -177,9 +337,14 @@ const AdminPage = () => {
       setEditingPost(null);
       setTitle('');
       setContent('');
-      setImageUrl('');
       setCategory('');
       setTags('');
+      setSelectedImage(null);
+      setSelectedSecondImage(null);
+      setImagePreview('');
+      setSecondImagePreview('');
+      setUploadProgress(0);
+      setSecondImageUploadProgress(0);
       setOpenDialog(false);
       await fetchPosts();
     } catch (err) {
@@ -216,9 +381,12 @@ const AdminPage = () => {
     setEditingPost(post);
     setTitle(post.title);
     setContent(post.content);
-    setImageUrl(post.imageUrl || '');
     setCategory(post.category || '');
     setTags(post.tags ? post.tags.join(', ') : '');
+    setSelectedImage(null);
+    setSelectedSecondImage(null);
+    setImagePreview('');
+    setSecondImagePreview('');
     setOpenDialog(true);
   };
 
@@ -227,9 +395,12 @@ const AdminPage = () => {
     setEditingPost(null);
     setTitle('');
     setContent('');
-    setImageUrl('');
     setCategory('');
     setTags('');
+    setSelectedImage(null);
+    setSelectedSecondImage(null);
+    setImagePreview('');
+    setSecondImagePreview('');
   };
 
   return (
@@ -310,60 +481,150 @@ const AdminPage = () => {
               <Typography variant="h5" sx={{ mb: 3, color: 'white' }}>
                 Create New Post
               </Typography>
-              <Grid container spacing={3}>
-                <Grid item xs={12}>
-                  <StyledTextField
-                    fullWidth
-                    label="Title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                  />
+              <form onSubmit={handleSubmit}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12}>
+                    <StyledTextField
+                      fullWidth
+                      label="Title"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Box sx={{ mb: 3 }}>
+                      <Typography variant="h6" sx={{ mb: 2, color: 'white' }}>
+                        Main Image
+                      </Typography>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleImageChange(e, false)}
+                        style={{ display: 'none' }}
+                        id="main-image-upload"
+                      />
+                      <label htmlFor="main-image-upload">
+                        <Button
+                          variant="contained"
+                          component="span"
+                          color="primary"
+                          disabled={loading}
+                        >
+                          Choose Main Image
+                        </Button>
+                      </label>
+                      {selectedImage && (
+                        <Box sx={{ mt: 2 }}>
+                          <Typography variant="body2" color="text.secondary">
+                            Selected file: {selectedImage.name}
+                          </Typography>
+                          {imagePreview && (
+                            <Box sx={{ mt: 1, maxWidth: 200 }}>
+                              <img 
+                                src={imagePreview} 
+                                alt="Preview" 
+                                style={{ width: '100%', height: 'auto', borderRadius: '4px' }} 
+                              />
+                            </Box>
+                          )}
+                          {uploadProgress > 0 && (
+                            <Box sx={{ mt: 1 }}>
+                              <LinearProgress variant="determinate" value={uploadProgress} />
+                              <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                                Uploading: {uploadProgress}%
+                              </Typography>
+                            </Box>
+                          )}
+                        </Box>
+                      )}
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Box sx={{ mb: 3 }}>
+                      <Typography variant="h6" sx={{ mb: 2, color: 'white' }}>
+                        Content Image (will be placed after 2 paragraphs)
+                      </Typography>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleImageChange(e, true)}
+                        style={{ display: 'none' }}
+                        id="second-image-upload"
+                      />
+                      <label htmlFor="second-image-upload">
+                        <Button
+                          variant="contained"
+                          component="span"
+                          color="primary"
+                          disabled={loading}
+                        >
+                          Choose Content Image
+                        </Button>
+                      </label>
+                      {selectedSecondImage && (
+                        <Box sx={{ mt: 2 }}>
+                          <Typography variant="body2" color="text.secondary">
+                            Selected file: {selectedSecondImage.name}
+                          </Typography>
+                          {secondImagePreview && (
+                            <Box sx={{ mt: 1, maxWidth: 200 }}>
+                              <img 
+                                src={secondImagePreview} 
+                                alt="Preview" 
+                                style={{ width: '100%', height: 'auto', borderRadius: '4px' }} 
+                              />
+                            </Box>
+                          )}
+                          {secondImageUploadProgress > 0 && (
+                            <Box sx={{ mt: 1 }}>
+                              <LinearProgress variant="determinate" value={secondImageUploadProgress} />
+                              <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                                Uploading: {secondImageUploadProgress}%
+                              </Typography>
+                            </Box>
+                          )}
+                        </Box>
+                      )}
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <StyledTextField
+                      fullWidth
+                      label="Category"
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <StyledTextField
+                      fullWidth
+                      label="Tags (comma separated)"
+                      value={tags}
+                      onChange={(e) => setTags(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <StyledTextField
+                      fullWidth
+                      label="Content"
+                      multiline
+                      rows={4}
+                      value={content}
+                      onChange={(e) => setContent(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      variant="contained"
+                      type="submit"
+                      disabled={loading}
+                      fullWidth
+                    >
+                      {loading ? <CircularProgress size={24} /> : 'Create Post'}
+                    </Button>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  <StyledTextField
-                    fullWidth
-                    label="Image URL"
-                    value={imageUrl}
-                    onChange={(e) => setImageUrl(e.target.value)}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <StyledTextField
-                    fullWidth
-                    label="Category"
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <StyledTextField
-                    fullWidth
-                    label="Tags (comma separated)"
-                    value={tags}
-                    onChange={(e) => setTags(e.target.value)}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <StyledTextField
-                    fullWidth
-                    label="Content"
-                    multiline
-                    rows={4}
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Button
-                    variant="contained"
-                    onClick={handleSubmit}
-                    disabled={loading}
-                    fullWidth
-                  >
-                    {loading ? <CircularProgress size={24} /> : 'Create Post'}
-                  </Button>
-                </Grid>
-              </Grid>
+              </form>
             </StyledPaper>
 
             <StyledPaper>
@@ -425,12 +686,114 @@ const AdminPage = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label="Image URL"
-                  value={imageUrl}
-                  onChange={(e) => setImageUrl(e.target.value)}
-                />
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="h6" sx={{ mb: 2 }}>
+                    Main Image
+                  </Typography>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleImageChange(e, false)}
+                    style={{ display: 'none' }}
+                    id="edit-main-image-upload"
+                  />
+                  <label htmlFor="edit-main-image-upload">
+                    <Button
+                      variant="contained"
+                      component="span"
+                      color="primary"
+                      disabled={loading}
+                    >
+                      Choose Main Image
+                    </Button>
+                  </label>
+                  {selectedImage && (
+                    <Box sx={{ mt: 2 }}>
+                      <Typography variant="body2" color="text.secondary">
+                        Selected file: {selectedImage.name}
+                      </Typography>
+                      {imagePreview && (
+                        <Box sx={{ mt: 1, maxWidth: 200 }}>
+                          <img 
+                            src={imagePreview} 
+                            alt="Preview" 
+                            style={{ width: '100%', height: 'auto', borderRadius: '4px' }} 
+                          />
+                        </Box>
+                      )}
+                      {uploadProgress > 0 && (
+                        <Box sx={{ mt: 1 }}>
+                          <LinearProgress variant="determinate" value={uploadProgress} />
+                          <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                            Uploading: {uploadProgress}%
+                          </Typography>
+                        </Box>
+                      )}
+                    </Box>
+                  )}
+                  {editingPost?.imageUrl && !selectedImage && (
+                    <Box sx={{ mt: 2 }}>
+                      <Typography variant="body2" color="text.secondary">
+                        Current image:
+                      </Typography>
+                      <Box sx={{ mt: 1, maxWidth: 200 }}>
+                        <img 
+                          src={editingPost.imageUrl} 
+                          alt="Current" 
+                          style={{ width: '100%', height: 'auto', borderRadius: '4px' }} 
+                        />
+                      </Box>
+                    </Box>
+                  )}
+                </Box>
+              </Grid>
+              <Grid item xs={12}>
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="h6" sx={{ mb: 2 }}>
+                    Content Image (will be placed after 2 paragraphs)
+                  </Typography>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleImageChange(e, true)}
+                    style={{ display: 'none' }}
+                    id="edit-second-image-upload"
+                  />
+                  <label htmlFor="edit-second-image-upload">
+                    <Button
+                      variant="contained"
+                      component="span"
+                      color="primary"
+                      disabled={loading}
+                    >
+                      Choose Content Image
+                    </Button>
+                  </label>
+                  {selectedSecondImage && (
+                    <Box sx={{ mt: 2 }}>
+                      <Typography variant="body2" color="text.secondary">
+                        Selected file: {selectedSecondImage.name}
+                      </Typography>
+                      {secondImagePreview && (
+                        <Box sx={{ mt: 1, maxWidth: 200 }}>
+                          <img 
+                            src={secondImagePreview} 
+                            alt="Preview" 
+                            style={{ width: '100%', height: 'auto', borderRadius: '4px' }} 
+                          />
+                        </Box>
+                      )}
+                      {secondImageUploadProgress > 0 && (
+                        <Box sx={{ mt: 1 }}>
+                          <LinearProgress variant="determinate" value={secondImageUploadProgress} />
+                          <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                            Uploading: {secondImageUploadProgress}%
+                          </Typography>
+                        </Box>
+                      )}
+                    </Box>
+                  )}
+                </Box>
               </Grid>
               <Grid item xs={12}>
                 <TextField
