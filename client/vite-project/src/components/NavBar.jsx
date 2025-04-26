@@ -158,7 +158,8 @@ const NavBar = () => {
       }}
     >
       <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
-        <Logo src={logo} alt="Tips Daniel Logo" />
+        <Logo src={logo} alt="Tips Daniel Logo" /> 
+        <span>TipsDaniel</span>
       </Box>
       <List>
         <ListItem button onClick={() => handleSectionClick('features')}>

@@ -59,9 +59,10 @@ const FeatureIcon = styled(ListItemIcon)(({ theme }) => ({
 
 const plans = [
   {
-    title: 'Basic Plan',
-    price: '$29',
+    title: 'Monthly Plan',
+    price: '$39',
     period: '/month',
+    description: 'Just checking us out? Cool.\nThis plan gets you in the game with full access — no strings attached.',
     features: [
       'Access to basic predictions',
       'Daily match analysis',
@@ -72,30 +73,31 @@ const plans = [
     recommended: false
   },
   {
-    title: 'Pro Plan',
-    price: '$49',
+    title: '4-Month Plan',
+    price: '$32',
     period: '/month',
+    description: 'Smart bettors think ahead.\nThis plan locks you in and saves you cash — a no-brainer if you\'re in it to win it.',
     features: [
-      'Everything in Basic',
-      'Advanced predictions',
-      'Real-time updates',
-      'Priority support',
-      'Expert analysis',
-      'Custom alerts'
+      '15+ tips every week',
+      'Powered by AI & expert analysis',
+      '24/7 support in our Instagram channel',
+      'Fast access to all picks'
+    
     ],
     recommended: true
   },
   {
-    title: 'Premium Plan',
-    price: '$99',
+    title: '12-Month Plan',
+    price: '$25',
     period: '/month',
+    description: 'You\'re not here to play around. You\'re here to build.\nThis is our all-in plan for people who want full access, full consistency, and full confidence.',
     features: [
       'Everything in Pro',
       'VIP predictions',
       '1-on-1 support',
       'Early access',
       'Custom strategies',
-      'API access'
+      'Exclusive content'
     ],
     recommended: false
   }
@@ -184,38 +186,48 @@ function JoinPage() {
                     </Box>
                   )}
                   <Typography 
-                    variant="h4" 
+                    variant="h5" 
+                    component="h3" 
                     sx={{ 
-                      mb: 3,
-                      color: 'white',
-                      fontWeight: 700,
-                      textAlign: 'center'
+                      color: 'white', 
+                      mb: 2,
+                      fontWeight: 'bold'
                     }}
                   >
                     {plan.title}
                   </Typography>
-                  <Box sx={{ textAlign: 'center', mb: 4 }}>
-                    <Typography
-                      variant="h3"
-                      component="span"
-                      sx={{
+                  <Box sx={{ display: 'flex', alignItems: 'baseline', mb: 2 }}>
+                    <Typography 
+                      variant="h4" 
+                      component="span" 
+                      sx={{ 
                         color: 'white',
-                        fontWeight: 700
+                        fontWeight: 'bold',
+                        mr: 1
                       }}
                     >
                       {plan.price}
                     </Typography>
-                    <Typography
-                      variant="subtitle1"
-                      component="span"
-                      sx={{
-                        color: 'rgba(255, 255, 255, 0.7)',
-                        ml: 1
+                    <Typography 
+                      variant="body1" 
+                      sx={{ 
+                        color: 'rgba(255, 255, 255, 0.7)'
                       }}
                     >
                       {plan.period}
                     </Typography>
                   </Box>
+                  <Typography 
+                    variant="body1" 
+                    sx={{ 
+                      color: 'rgba(255, 255, 255, 0.7)',
+                      mb: 3,
+                      whiteSpace: 'pre-line'
+                    }}
+                  >
+                    {plan.description}
+                  </Typography>
+
                   <List sx={{ mb: 4, flex: 1 }}>
                     {plan.features.map((feature) => (
                       <ListItem key={feature} sx={{ px: 0 }}>
@@ -231,6 +243,7 @@ function JoinPage() {
                             }
                           }}
                         />
+                        
                       </ListItem>
                     ))}
                   </List>

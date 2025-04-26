@@ -520,9 +520,9 @@ function HomePage() {
                 letterSpacing: '-0.02em'
               }}
             >
-              Come <UnderlinedText>Win</UnderlinedText> <br/>With TipsDaniel
+              Built on <UnderlinedText>Stats</UnderlinedText>. <br/>Backed by <UnderlinedText>Logic</UnderlinedText>. 
             </AnimatedTypography>
-            
+
             <AnimatedTypography 
               variant="hero" 
               variants={heroTextVariants}
@@ -535,7 +535,10 @@ function HomePage() {
                 mb: 4
               }}
             >
-              The combined power of AI and human expertise that help you see the future in any game.
+              This isn't guesswork. It's precision, strategy, and community.
+              <br/>
+              TipsDaniel is where smart bettors start winning. 
+
             </AnimatedTypography>
 
             <GlowingButtonWrapper
@@ -626,8 +629,8 @@ function HomePage() {
               Why You Will Win with Us?
             </Typography>
             <Typography variant="h6" align="center" sx={{ 
-              mb: 4,
-              lineHeight: 1.8,
+              mb: 6,
+              lineHeight: 1.2,
               fontSize: "1.1rem",
               maxWidth: "800px",
               margin: "0 auto",
@@ -636,11 +639,15 @@ function HomePage() {
                 mb: 2
               }
             }}>
-              <p>If you love football, crave the thrill, and know there's more to winning than just luck — you're one of us.</p>
+              <p>TipsDaniel – Where Winning Is Just the Beginning</p>
+<p>We don’t just tell you what to bet on.</p>
+<p>We teach you how to think like an analyst — and play like a pro.</p>
+
+              {/* <p>If you love football, crave the thrill, and know there's more to winning than just luck — you're one of us.</p>
               
               <p>We're a private network of sharp minds who live the game, study the numbers, and built an AI system that turns raw data into real advantages.</p>
               
-              <p>This isn't guesswork. It's precision, strategy, and community — built for those who play to win.</p>
+              <p>This isn't guesswork. It's precision, strategy, and community — built for those who play to win.</p> */}
             </Typography>
             <Box sx={{ 
               position: 'relative',
@@ -752,7 +759,7 @@ function HomePage() {
                       mb: 1,
                       textShadow: '0 2px 4px rgba(0, 180, 216, 0.3)'
                     }}>
-                      87%
+                      78%
                     </Typography>
                     <Typography variant="h6" sx={{ 
                       color: 'white',
@@ -844,7 +851,7 @@ function HomePage() {
                       mb: 1,
                       textShadow: '0 2px 4px rgba(76, 175, 80, 0.3)'
                     }}>
-                      500+
+                      5K+
                     </Typography>
                     <Typography variant="h6" sx={{ 
                       color: 'white',
@@ -890,17 +897,17 @@ function HomePage() {
                       mb: 1,
                       textShadow: '0 2px 4px rgba(255, 167, 38, 0.3)'
                     }}>
-                      3.2x
+                      50%
                     </Typography>
                     <Typography variant="h6" sx={{ 
                       color: 'white',
                       fontWeight: 600,
                       mb: 1
                     }}>
-                      ROI
+                      Profit last month
                     </Typography>
                     <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-                      Superior returns compared to traditional betting strategies
+                    We recommend betting 10% of your total budget on each wager. This approach helps you manage your bankroll wisely, reduce risk, and stay in the game longer.
                     </Typography>
                   </Box>
                 </Box>
@@ -981,10 +988,12 @@ function HomePage() {
                     fontWeight: 600,
                     marginBottom: 1
                   }}>
-                    Proven Edge with AI-Powered Insights
+                    AI + Experience
                   </Typography>
                   <FeatureDescription>
-                    Join a community that leverages <strong>cutting-edge artificial intelligence</strong> and expert analysis to identify high-value football bets. Our system doesn't guess — it calculates.
+                  A lethal combo of advanced AI systems and analysts with 20 years of sharp betting experience.
+                  <br/>
+                  <strong>This isn’t guessing. It’s calculated execution.</strong>
                   </FeatureDescription>
                 </FeatureCard>
               </Grid>
@@ -1020,10 +1029,15 @@ function HomePage() {
                     fontWeight: 600,
                     marginBottom: 1
                   }}>                  
-                    Trusted by a Team of Experts   
+                  Premium Blogs for Those Who Don’t Settle for “Good Luck”
                   </Typography>
                   <FeatureDescription>
-                    Behind every prediction stands a dedicated team of <strong>experienced analysts</strong> working hand-in-hand with our advanced models. It's the perfect balance between human expertise and machine precision.
+                  Want to know why a pick makes sense?
+                  <br/>
+                  Our blog cuts through games like a blade through stats.
+                  <br/>
+                  <strong>Knowledge is power — and here, it’s premium.
+                  </strong> 
                   </FeatureDescription>
                 </FeatureCard>
               </Grid>
@@ -1059,10 +1073,12 @@ function HomePage() {
                     fontWeight: 600,
                     marginBottom: 1
                   }}>
-                    Built for Winners, Backed by Results
-                  </Typography>
+                  Telegram Group You Don’t Share with Friends
+          </Typography>
                   <FeatureDescription>
-                    Our community isn't just about tips — it's about consistent, <strong>data-driven success</strong>. We track performance, optimize strategies, and deliver real value to our members week after week.
+                  This is where the odds are still high when they reach you.
+                  Live tips, insider info, and a community that lives and breathes data.
+              <strong>If you’re inside — you feel it before the market moves..</strong>
                   </FeatureDescription>
                 </FeatureCard>
               </Grid>
