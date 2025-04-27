@@ -335,38 +335,48 @@ const NavBar = () => {
                     anchorEl={languageAnchorEl}
                     open={Boolean(languageAnchorEl)}
                     onClose={handleLanguageClose}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'right',
+                    }}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
                     PaperProps={{
                       sx: {
-                        background: 'rgba(26, 31, 60, 0.95)',
-                        backdropFilter: 'blur(10px)',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                        minWidth: '150px',
-                      }
+                        mt: 1.5,
+                        minWidth: '120px',
+                        borderRadius: '12px',
+                        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+                        '& .MuiMenuItem-root': {
+                          padding: '12px 16px',
+                          fontSize: '1rem',
+                          '&:hover': {
+                            backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                          },
+                        },
+                      },
                     }}
                   >
-                    {languageOptions.map((option) => (
-                      <MenuItem
-                        key={option.code}
-                        onClick={() => handleLanguageSelect(option.code)}
-                        selected={option.code === language}
-                        sx={{
-                          color: option.code === language ? theme.palette.primary.main : 'white',
-                          '&:hover': {
-                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                          },
-                        }}
-                      >
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <ReactCountryFlag
-                            countryCode={option.countryCode}
-                            svg
-                            style={{ width: '1.5em', height: '1.5em', borderRadius: '50%', marginRight: 8 }}
-                            title={option.name}
-                          />
-                          <Typography>{option.name}</Typography>
-                        </Box>
-                      </MenuItem>
-                    ))}
+                    <MenuItem onClick={() => handleLanguageSelect('en')}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <span role="img" aria-label="English">🇺🇸</span>
+                        <Typography>English</Typography>
+                      </Box>
+                    </MenuItem>
+                    <MenuItem onClick={() => handleLanguageSelect('es')}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <span role="img" aria-label="Spanish">🇪🇸</span>
+                        <Typography>Español</Typography>
+                      </Box>
+                    </MenuItem>
+                    <MenuItem onClick={() => handleLanguageSelect('he')}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <span role="img" aria-label="Hebrew">🇮🇱</span>
+                        <Typography>עברית</Typography>
+                      </Box>
+                    </MenuItem>
                   </Menu>
                 </Box>
               </Box>
@@ -375,7 +385,6 @@ const NavBar = () => {
         </Container>
       </StyledAppBar>
       <Drawer
-        variant="temporary"
         anchor="right"
         open={mobileOpen}
         onClose={handleDrawerToggle}
@@ -385,32 +394,192 @@ const NavBar = () => {
         sx={{
           display: { xs: 'block', md: 'none' },
           '& .MuiDrawer-paper': {
-            boxSizing: 'border-box', 
-            width: 250,
+            boxSizing: 'border-box',
+            width: 240,
             background: 'rgba(26, 31, 60, 0.95)',
             backdropFilter: 'blur(10px)',
             borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
           },
         }}
       >
-        <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
-          <Logo src={logo} alt={t('brandName')} /> 
-          <span>{t('brandName')}</span>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            padding: '20px',
+          }}
+        >
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+            <IconButton
+              color="inherit"
+              aria-label="close drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ color: 'white' }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Button
+              component={Link}
+              to="/"
+              onClick={handleDrawerToggle}
+              sx={{
+                color: 'white',
+                textTransform: 'none',
+                fontSize: '1.1rem',
+                justifyContent: 'flex-start',
+                '&:hover': {
+                  color: 'primary.main',
+                },
+              }}
+            >
+              Home
+            </Button>
+            <Button
+              component={Link}
+              to="/features"
+              onClick={handleDrawerToggle}
+              sx={{
+                color: 'white',
+                textTransform: 'none',
+                fontSize: '1.1rem',
+                justifyContent: 'flex-start',
+                '&:hover': {
+                  color: 'primary.main',
+                },
+              }}
+            >
+              {t('whyUs')}
+            </Button>
+            <Button
+              component={Link}
+              to="/how-it-works"
+              onClick={handleDrawerToggle}
+              sx={{
+                color: 'white',
+                textTransform: 'none',
+                fontSize: '1.1rem',
+                justifyContent: 'flex-start',
+                '&:hover': {
+                  color: 'primary.main',
+                },
+              }}
+            >
+              {t('howItWorks')}
+            </Button>
+            <Button
+              component={Link}
+              to="/blog"
+              onClick={handleDrawerToggle}
+              sx={{
+                color: 'white',
+                textTransform: 'none',
+                fontSize: '1.1rem',
+                justifyContent: 'flex-start',
+                '&:hover': {
+                  color: 'primary.main',
+                },
+              }}
+            >
+              {t('blog')}
+            </Button>
+            <Button
+              component={Link}
+              to="/join"
+              onClick={handleDrawerToggle}
+              sx={{
+                color: 'white',
+                textTransform: 'none',
+                fontSize: '1.1rem',
+                justifyContent: 'flex-start',
+                '&:hover': {
+                  color: 'primary.main',
+                },
+              }}
+            >
+              {t('joinNow')}
+            </Button>
+            <Box sx={{ mt: 2 }}>
+              <Button
+                onClick={handleLanguageClick}
+                sx={{
+                  color: 'white',
+                  textTransform: 'none',
+                  fontSize: '1.1rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  width: '100%',
+                  justifyContent: 'flex-start',
+                  '&:hover': {
+                    color: 'primary.main',
+                  },
+                }}
+              >
+                <ReactCountryFlag
+                  countryCode={languageOptions.find(opt => opt.code === language)?.countryCode || 'US'}
+                  svg
+                  style={{ width: '1.5em', height: '1.5em', borderRadius: '50%' }}
+                />
+                {languageOptions.find(opt => opt.code === language)?.name}
+              </Button>
+              <Menu
+                anchorEl={languageAnchorEl}
+                open={Boolean(languageAnchorEl)}
+                onClose={handleLanguageClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                PaperProps={{
+                  sx: {
+                    background: 'rgba(26, 31, 60, 0.95)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    minWidth: '150px',
+                    '& .MuiMenuItem-root': {
+                      color: 'white',
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      },
+                    },
+                  },
+                }}
+              >
+                {languageOptions.map((option) => (
+                  <MenuItem
+                    key={option.code}
+                    onClick={() => handleLanguageSelect(option.code)}
+                    selected={option.code === language}
+                    sx={{
+                      color: option.code === language ? theme.palette.primary.main : 'white',
+                      '&:hover': {
+                        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      },
+                    }}
+                  >
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <ReactCountryFlag
+                        countryCode={option.countryCode}
+                        svg
+                        style={{ width: '1.5em', height: '1.5em', borderRadius: '50%', marginRight: 8 }}
+                        title={option.name}
+                      />
+                      <Typography>{option.name}</Typography>
+                    </Box>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          </Box>
         </Box>
-        <List>
-          <ListItem button onClick={() => handleSectionClick('features')}>
-            <ListItemText primary={t('whyUs')} />
-          </ListItem>
-          <ListItem button onClick={() => handleSectionClick('how-it-works')}>
-            <ListItemText primary={t('howItWorks')} />
-          </ListItem>
-          <ListItem button component={Link} to="/blog" onClick={() => setMobileOpen(false)}>
-            <ListItemText primary={t('blog')} />
-          </ListItem>
-          <ListItem button component={Link} to="/join" onClick={() => setMobileOpen(false)}>
-            <ListItemText primary={t('joinNow')} />
-          </ListItem>
-        </List>
       </Drawer>
       <Toolbar />
     </>
