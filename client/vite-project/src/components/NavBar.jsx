@@ -11,12 +11,21 @@ import {
   ListItem,
   ListItemText,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
+  Typography,
+  Button,
+  Menu,
+  MenuItem
 } from '@mui/material';
-import { Menu as MenuIcon } from '@mui/icons-material';
+import MenuIcon from '@mui/icons-material/Menu';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { styled } from '@mui/material/styles';
 import logo from '../assets/LogoTips.jpg';
-import Button from './Button';
+import { useLanguage } from '../context/LanguageContext';
+import { languageOptions } from '../locales/translations';
+import ReactCountryFlag from 'react-country-flag';
+import CloseIcon from '@mui/icons-material/Close';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   background: 'rgba(26, 31, 60, 0.8)',
@@ -37,6 +46,16 @@ const Logo = styled('img')(({ theme }) => ({
   },
 }));
 
+const NavLinks = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  gap: '2rem',
+  alignItems: 'center',
+  margin: '0 auto',
+  [theme.breakpoints.down('md')]: {
+    display: 'none',
+  },
+}));
+
 const NavLink = styled(Link)(({ theme, active }) => ({
   color: active ? '#00B4D8' : 'white',
   textDecoration: 'none',
@@ -45,7 +64,7 @@ const NavLink = styled(Link)(({ theme, active }) => ({
   position: 'relative',
   padding: '0.5rem 1rem',
   transition: 'all 0.3s ease',
-  fontFamily: "'Inter', 'Poppins', sans-serif",
+  fontFamily: "'Inter', sans-serif",
   '&::after': {
     content: '""',
     position: 'absolute',
@@ -76,7 +95,7 @@ const NavButton = styled('button')(({ theme, active }) => ({
   position: 'relative',
   padding: '0.5rem 1rem',
   transition: 'all 0.3s ease',
-  fontFamily: "'Inter', 'Poppins', sans-serif",
+  fontFamily: "'Inter', sans-serif",
   cursor: 'pointer',
   '&::after': {
     content: '""',
@@ -99,19 +118,84 @@ const NavButton = styled('button')(({ theme, active }) => ({
   },
 }));
 
-const NavLinks = styled(Box)(({ theme }) => ({
+const LanguageSelector = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  gap: theme.spacing(2),
-  margin: '0 auto',
-  [theme.breakpoints.down('md')]: {
-    display: 'none',
+  gap: '0.5rem',
+  cursor: 'pointer',
+  padding: '0.5rem 1rem',
+  borderRadius: '8px',
+  transition: 'all 0.2s ease',
+  '&:hover': {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  },
+}));
+
+const LanguageMenu = styled(Menu)(({ theme }) => ({
+  '& .MuiPaper-root': {
+    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+    backdropFilter: 'blur(10px)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    minWidth: '150px',
+  },
+}));
+
+const LanguageMenuItem = styled(MenuItem)(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '0.5rem',
+  color: theme.palette.text.primary,
+  '&:hover': {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  },
+}));
+
+const JoinButton = styled(Button)(({ theme }) => ({
+  background: 'linear-gradient(90deg, #00b4d8 0%, #0096c7 100%)',
+  color: '#fff',
+  padding: '0.7rem 2.2rem 0.7rem 1.5rem',
+  borderRadius: '18px',
+  fontWeight: 700,
+  fontSize: '1.15rem',
+  boxShadow: '0 2px 16px 0 rgba(0,180,216,0.15)',
+  textTransform: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '0.1em',
+  transition: 'background 0.2s, box-shadow 0.2s',
+  '&:hover': {
+    background: 'linear-gradient(90deg, #0096c7 0%, #00b4d8 100%)',
+    boxShadow: '0 4px 24px 0 rgba(0,180,216,0.25)',
+  },
+}));
+
+const LanguageButton = styled(Button)(({ theme }) => ({
+  minWidth: '140px',
+  maxWidth: '200px',
+  padding: theme.spacing(1, 2),
+  marginLeft: theme.spacing(1),
+  color: 'white',
+  border: '1px solid rgba(255,255,255,0.3)',
+  background: 'transparent',
+  borderRadius: '20px',
+  fontWeight: 500,
+  boxShadow: 'none',
+  textTransform: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '0.5rem',
+  overflow: 'visible',
+  '&:hover': {
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    borderColor: theme.palette.primary.main,
   },
 }));
 
 const NavBar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [languageAnchorEl, setLanguageAnchorEl] = useState(null);
+  const { language, setLanguage, t } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
   const theme = useTheme();
@@ -147,36 +231,20 @@ const NavBar = () => {
     setMobileOpen(false);
   };
 
-  const drawer = (
-    <Box
-      sx={{
-        width: 250,
-        background: 'rgba(26, 31, 60, 0.95)',
-        height: '100%',
-        backdropFilter: 'blur(10px)',
-        borderRight: '1px solid rgba(255, 255, 255, 0.1)',
-      }}
-    >
-      <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
-        <Logo src={logo} alt="Tips Daniel Logo" /> 
-        <span>TipsDaniel</span>
-      </Box>
-      <List>
-        <ListItem button onClick={() => handleSectionClick('features')}>
-          <ListItemText primary="Why Us?" />
-        </ListItem>
-        <ListItem button onClick={() => handleSectionClick('how-it-works')}>
-          <ListItemText primary="How It Works?" />
-        </ListItem>
-        <ListItem button component={Link} to="/blog" onClick={() => setMobileOpen(false)}>
-          <ListItemText primary="Blog" />
-        </ListItem>
-        <ListItem button component={Link} to="/join" onClick={() => setMobileOpen(false)}>
-          <ListItemText primary="Join Now" />
-        </ListItem>
-      </List>
-    </Box>
-  );
+  const handleLanguageClick = (event) => {
+    setLanguageAnchorEl(event.currentTarget);
+  };
+
+  const handleLanguageClose = () => {
+    setLanguageAnchorEl(null);
+  };
+
+  const handleLanguageSelect = (code) => {
+    setLanguage(code);
+    handleLanguageClose();
+  };
+
+  const currentLanguageOption = languageOptions.find(option => option.code === language);
 
   return (
     <>
@@ -195,8 +263,9 @@ const NavBar = () => {
           <Toolbar sx={{ justifyContent: 'space-between', py: { xs: 1, sm: 2 } }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Link to="/">
-                <Logo src={logo} alt="Tips Daniel Logo" />
+                <Logo src={logo} alt={t('brandName')} />
               </Link>
+              <span style={{ display: 'none' }}>{t('brandName')}</span>
             </Box>
 
             {isMobile ? (
@@ -205,7 +274,7 @@ const NavBar = () => {
                 aria-label="open drawer"
                 edge="start"
                 onClick={handleDrawerToggle}
-                sx={{ mr: 2 }}
+                sx={{ ml: 2 }}
               >
                 <MenuIcon />
               </IconButton>
@@ -216,29 +285,90 @@ const NavBar = () => {
                     active={location.pathname === '/' && document.getElementById('features')?.getBoundingClientRect().top < 100}
                     onClick={() => handleSectionClick('features')}
                   >
-                    Why Us?
+                    {t('whyUs')}
                   </NavButton>
                   <NavButton 
                     active={location.pathname === '/' && document.getElementById('how-it-works')?.getBoundingClientRect().top < 100}
                     onClick={() => handleSectionClick('how-it-works')}
                   >
-                    How It Works?
+                    {t('howItWorks')}
                   </NavButton>
                   <NavLink 
                     to="/blog" 
                     active={location.pathname === '/blog'}
                   >
-                    Blog
+                    {t('blog')}
                   </NavLink>
                 </NavLinks>
-                <Button 
-                  component={Link} 
-                  to="/join"
-                  showArrow
-                  size="medium"
-                >
-                  Join Now
-                </Button>
+
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <LanguageButton
+                    onClick={handleLanguageClick}
+                    startIcon={
+                      currentLanguageOption ? (
+                        <ReactCountryFlag
+                          countryCode={currentLanguageOption.countryCode}
+                          svg
+                          style={{ width: '1.5em', height: '1.5em', borderRadius: '50%', marginRight: 4 }}
+                          title={currentLanguageOption.name}
+                        />
+                      ) : (
+                        <ReactCountryFlag
+                          countryCode="GB"
+                          svg
+                          style={{ width: '1.5em', height: '1.5em', borderRadius: '50%', marginRight: 4 }}
+                          title="English"
+                        />
+                      )
+                    }
+                    endIcon={<ArrowDropDownIcon style={{ fontSize: 18, marginLeft: 2 }} />}
+                  >
+                    {currentLanguageOption?.name || 'English'}
+                  </LanguageButton>
+                  
+                  <JoinButton component={Link} to="/join">
+                    {t('joinNow')}
+                    <ArrowForwardIcon sx={{ fontSize: 26 }} />
+                  </JoinButton>
+
+                  <Menu
+                    anchorEl={languageAnchorEl}
+                    open={Boolean(languageAnchorEl)}
+                    onClose={handleLanguageClose}
+                    PaperProps={{
+                      sx: {
+                        background: 'rgba(26, 31, 60, 0.95)',
+                        backdropFilter: 'blur(10px)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        minWidth: '150px',
+                      }
+                    }}
+                  >
+                    {languageOptions.map((option) => (
+                      <MenuItem
+                        key={option.code}
+                        onClick={() => handleLanguageSelect(option.code)}
+                        selected={option.code === language}
+                        sx={{
+                          color: option.code === language ? theme.palette.primary.main : 'white',
+                          '&:hover': {
+                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                          },
+                        }}
+                      >
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <ReactCountryFlag
+                            countryCode={option.countryCode}
+                            svg
+                            style={{ width: '1.5em', height: '1.5em', borderRadius: '50%', marginRight: 8 }}
+                            title={option.name}
+                          />
+                          <Typography>{option.name}</Typography>
+                        </Box>
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </Box>
               </Box>
             )}
           </Toolbar>
@@ -254,7 +384,7 @@ const NavBar = () => {
         }}
         sx={{
           display: { xs: 'block', md: 'none' },
-          '& .MuiDrawer-paper': { 
+          '& .MuiDrawer-paper': {
             boxSizing: 'border-box', 
             width: 250,
             background: 'rgba(26, 31, 60, 0.95)',
@@ -263,7 +393,24 @@ const NavBar = () => {
           },
         }}
       >
-        {drawer}
+        <Box sx={{ p: 2, display: 'flex', justifyContent: 'center' }}>
+          <Logo src={logo} alt={t('brandName')} /> 
+          <span>{t('brandName')}</span>
+        </Box>
+        <List>
+          <ListItem button onClick={() => handleSectionClick('features')}>
+            <ListItemText primary={t('whyUs')} />
+          </ListItem>
+          <ListItem button onClick={() => handleSectionClick('how-it-works')}>
+            <ListItemText primary={t('howItWorks')} />
+          </ListItem>
+          <ListItem button component={Link} to="/blog" onClick={() => setMobileOpen(false)}>
+            <ListItemText primary={t('blog')} />
+          </ListItem>
+          <ListItem button component={Link} to="/join" onClick={() => setMobileOpen(false)}>
+            <ListItemText primary={t('joinNow')} />
+          </ListItem>
+        </List>
       </Drawer>
       <Toolbar />
     </>

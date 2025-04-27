@@ -10,7 +10,10 @@ import {
   Chip,
   Divider,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
+  Card,
+  CardMedia,
+  CardContent
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
@@ -38,6 +41,62 @@ const PostImage = styled('img')(({ theme }) => ({
     maxHeight: '250px',
     marginBottom: '16px',
   },
+}));
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  background: 'rgba(19, 47, 76, 0.8)',
+  border: '1px solid rgba(0, 180, 216, 0.2)',
+  borderRadius: '16px',
+  overflow: 'hidden',
+  [theme.breakpoints.down('sm')]: {
+    marginBottom: theme.spacing(2),
+  },
+}));
+
+const StyledCardMedia = styled(CardMedia)(({ theme }) => ({
+  height: 400,
+  [theme.breakpoints.down('sm')]: {
+    height: 250,
+  },
+}));
+
+const GlassCard = styled(Card)(({ theme }) => ({
+  borderRadius: 32,
+  background: 'rgba(36, 44, 66, 0.95)',
+  color: '#fff',
+  boxShadow: '0 8px 32px 0 rgba(0,0,0,0.18)',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  width: '100vw',
+  maxWidth: 'none',
+  margin: 0,
+  padding: theme.spacing(5, 5, 4, 5),
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(3, 1.5, 2, 1.5),
+    maxWidth: '100vw',
+  },
+}));
+
+const GlassChip = styled(Chip)(({ theme }) => ({
+  background: 'rgba(191, 201, 219, 0.13)',
+  color: '#bfc9db',
+  fontWeight: 500,
+  fontSize: '0.85rem',
+  borderRadius: 16,
+  marginRight: theme.spacing(1),
+  marginBottom: theme.spacing(2),
+  padding: '0 12px',
+  height: 26,
+  boxShadow: '0 0 4px 1px rgba(0,180,216,0.10)',
+}));
+
+const GlassImage = styled('img')(({ theme }) => ({
+  width: '100%',
+  maxHeight: 340,
+  objectFit: 'cover',
+  borderRadius: 24,
+  marginBottom: theme.spacing(3),
 }));
 
 const PostDetailPage = () => {
@@ -103,75 +162,75 @@ const PostDetailPage = () => {
       background: 'linear-gradient(135deg, #1a1f3c 0%, #152238 100%)',
       py: { xs: 4, sm: 6, md: 8 }
     }}>
-      <Container maxWidth="lg" sx={{ 
-        mt: { xs: 8, sm: 10, md: 12.5 }, 
-        mb: { xs: 4, sm: 6, md: 8 },
-        px: { xs: 2, sm: 3, md: 4 }
-      }}>
-        <StyledPaper>
-          {post.imageUrl && (
-            <PostImage src={post.imageUrl} alt={post.title} />
-          )}
-          
-          <Typography 
-            variant={isMobile ? "h3" : "h2"} 
-            component="h1" 
-            gutterBottom
-            sx={{ 
-              fontSize: { xs: '1.75rem', sm: '2.25rem', md: '3rem' },
-              lineHeight: 1.2
-            }}
-          >
-            {post.title}
-          </Typography>
-
-          <Box sx={{ mb: 3 }}>
-            <Typography 
-              variant="subtitle1" 
-              color="text.secondary" 
-              gutterBottom
-              sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
+      <Container maxWidth={false} sx={{ py: 8, px: { xs: 0, sm: 4 } }}>
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+            <CircularProgress />
+          </Box>
+        ) : error ? (
+          <Alert severity="error" sx={{ mt: 4 }}>{t('failedToLoadPost')}</Alert>
+        ) : post ? (
+          <GlassCard>
+            {(() => {
+              const postDate = post.date || post.createdAt || post.datePublished;
+              return (
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    color: '#bfc9db',
+                    fontSize: '1rem',
+                    textAlign: 'center',
+                    mb: 2,
+                    fontWeight: 400,
+                  }}
+                >
+                  {postDate && (new Date(postDate)).toLocaleDateString()} {post.author && (
+                    post.author.toLowerCase() === 'admin' ? '| By TipsDaniel' : `| By ${post.author}`
+                  )}
+                </Typography>
+              );
+            })()}
+            {post.image && (
+              <GlassImage src={post.image} alt={post.title} />
+            )}
+            <Typography
+              variant="h3"
+              component="h1"
+              sx={{
+                fontSize: { xs: '2rem', sm: '2.5rem' },
+                fontWeight: 800,
+                color: '#fff',
+                textAlign: 'center',
+                mb: 2,
+                lineHeight: 1.18,
+                wordBreak: 'break-word',
+              }}
             >
-              By {post.author} • {new Date(post.createdAt).toLocaleDateString()}
+              {post.title}
             </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              {post.category && (
-                <Chip 
-                  label={post.category} 
-                  sx={{ 
-                    background: 'linear-gradient(45deg, #00B4D8 30%, #48CAE4 90%)',
-                    color: 'white',
-                    fontSize: { xs: '0.75rem', sm: '0.875rem' }
-                  }} 
-                />
-              )}
-              {post.tags && post.tags.map((tag) => (
-                <Chip 
-                  key={tag} 
-                  label={tag} 
-                  sx={{ 
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    color: 'white',
-                    fontSize: { xs: '0.75rem', sm: '0.875rem' }
-                  }} 
-                />
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', mb: 2 }}>
+              {post.category && <GlassChip label={post.category} />}
+              {post.tags && post.tags.map((tag, idx) => (
+                <GlassChip key={idx} label={tag} />
               ))}
             </Box>
-          </Box>
-
-          <Divider sx={{ my: 3 }} />
-
-          <Typography 
-            variant="body1" 
-            sx={{ 
-              whiteSpace: 'pre-wrap', 
-              lineHeight: 1.8,
-              fontSize: { xs: '0.875rem', sm: '1rem' }
-            }}
-          >
-            {post.content}
-          </Typography>
-        </StyledPaper>
+            <Typography
+              variant="body1"
+              sx={{
+                color: '#e3eaf7',
+                fontSize: '1.13rem',
+                lineHeight: 1.7,
+                mt: 2,
+                whiteSpace: 'pre-line',
+                wordBreak: 'break-word',
+                textAlign: 'left',
+                width: '100%',
+              }}
+            >
+              {post.content}
+            </Typography>
+          </GlassCard>
+        ) : null}
       </Container>
     </Box>
   );

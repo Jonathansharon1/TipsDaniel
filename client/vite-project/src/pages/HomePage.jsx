@@ -14,7 +14,8 @@ import {
   CardMedia,
   Chip,
   CircularProgress,
-  Alert
+  Alert,
+  Paper
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { 
@@ -39,6 +40,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import NavBar from '../components/NavBar';
 import CustomButton from '../components/Button';
+import { useLanguage } from '../context/LanguageContext';
 
 // Styled components
 const HeroSection = styled(Box)(({ theme }) => ({
@@ -205,6 +207,24 @@ const StepWrapper = styled(Box)(({ theme }) => ({
   }
 }));
 
+const StepCard = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(4),
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  textAlign: 'center',
+  background: 'rgba(255, 255, 255, 0.05)',
+  backdropFilter: 'blur(10px)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
+  borderRadius: '16px',
+  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+  '&:hover': {
+    transform: 'translateY(-5px)',
+    boxShadow: '0 10px 20px rgba(0, 0, 0, 0.2)',
+  },
+}));
+
 const StepNumber = styled(Box)(({ theme }) => ({
   width: '60px',
   height: '60px',
@@ -218,6 +238,7 @@ const StepNumber = styled(Box)(({ theme }) => ({
   fontWeight: 700,
   position: 'relative',
   flexShrink: 0,
+  marginBottom: theme.spacing(3),
   '&::after': {
     content: '""',
     position: 'absolute',
@@ -429,6 +450,7 @@ function HomePage() {
   const [latestPosts, setLatestPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { t } = useLanguage();
 
   useEffect(() => {
     // Check if we need to scroll to a section (when navigating from another page)
@@ -520,7 +542,8 @@ function HomePage() {
                 letterSpacing: '-0.02em'
               }}
             >
-              Built on <UnderlinedText>Stats</UnderlinedText>. <br/>Backed by <UnderlinedText>Logic</UnderlinedText>. 
+              {t('heroTitle.part1')} <UnderlinedText>{t('heroTitle.underlined1')}</UnderlinedText>.<br/>
+              {t('heroTitle.part2')} <UnderlinedText>{t('heroTitle.underlined2')}</UnderlinedText>.
             </AnimatedTypography>
 
             <AnimatedTypography 
@@ -532,13 +555,11 @@ function HomePage() {
                 textShadow: '0 1px 2px rgba(0,0,0,0.1)',
                 color: 'rgba(255, 255, 255, 0.9)',
                 textAlign: 'center',
-                mb: 4
+                mb: 4,
+                whiteSpace: 'pre-line'
               }}
             >
-              This isn't guesswork. It's precision, strategy, and community.
-              <br/>
-              TipsDaniel is where smart bettors start winning. 
-
+              {t('heroSubtitle')}
             </AnimatedTypography>
 
             <GlowingButtonWrapper
@@ -552,7 +573,7 @@ function HomePage() {
                 onClick={handleJoinClick}
                 showArrow={true}
               >
-                Start Winning Now
+                {t('heroButton')}
               </CustomButton>
             </GlowingButtonWrapper>
           </AnimatedBox>
@@ -626,7 +647,7 @@ function HomePage() {
                 borderRadius: '2px'
               }
             }}>
-              Why You Will Win with Us?
+              {t('featuresTitle')}
             </Typography>
             <Typography variant="h6" align="center" sx={{ 
               mb: 6,
@@ -635,19 +656,12 @@ function HomePage() {
               maxWidth: "800px",
               margin: "0 auto",
               color: "rgba(255,255,255,0.9)",
+              whiteSpace: 'pre-line',
               "& p": {
                 mb: 2
               }
             }}>
-              <p>TipsDaniel – Where Winning Is Just the Beginning</p>
-<p>We don’t just tell you what to bet on.</p>
-<p>We teach you how to think like an analyst — and play like a pro.</p>
-
-              {/* <p>If you love football, crave the thrill, and know there's more to winning than just luck — you're one of us.</p>
-              
-              <p>We're a private network of sharp minds who live the game, study the numbers, and built an AI system that turns raw data into real advantages.</p>
-              
-              <p>This isn't guesswork. It's precision, strategy, and community — built for those who play to win.</p> */}
+              {t('featuresSubtitle')}
             </Typography>
             <Box sx={{ 
               position: 'relative',
@@ -704,7 +718,7 @@ function HomePage() {
                     borderRadius: '2px'
                   }
                 }}>
-                  Our Winning Edge
+                  {t('winningEdge')}
                 </Typography>
                 
                 <Box sx={{ 
@@ -766,10 +780,10 @@ function HomePage() {
                       fontWeight: 600,
                       mb: 1
                     }}>
-                      Win Rate
+                      {t('winRate')}
                     </Typography>
                     <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-                      Consistently outperforming market expectations
+                      {t('winRateDesc')}
                     </Typography>
                   </Box>
                   
@@ -812,10 +826,10 @@ function HomePage() {
                       fontWeight: 600,
                       mb: 1
                     }}>
-                      Analysis
+                      {t('roundTheClockSubtitle')}
                     </Typography>
                     <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-                      Round-the-clock monitoring of global matches
+                      {t('roundTheClockDesc')}
                     </Typography>
                   </Box>
                   
@@ -858,10 +872,10 @@ function HomePage() {
                       fontWeight: 600,
                       mb: 1
                     }}>
-                      Matches Analyzed
+                      {t('matchesAnalyzed')}
                     </Typography>
                     <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-                      Deep insights across multiple leagues and competitions
+                      {t('matchesAnalyzedDesc')}
                     </Typography>
                   </Box>
                   
@@ -904,10 +918,10 @@ function HomePage() {
                       fontWeight: 600,
                       mb: 1
                     }}>
-                      Profit last month
+                      {t('profitLastMonth')}
                     </Typography>
                     <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
-                    We recommend betting 10% of your total budget on each wager. This approach helps you manage your bankroll wisely, reduce risk, and stay in the game longer.
+                      {t('bankrollAdvice')}
                     </Typography>
                   </Box>
                 </Box>
@@ -936,7 +950,7 @@ function HomePage() {
                     }
                   }}
                 >
-                  Our advanced analytics platform provides real-time insights and predictions for upcoming matches, giving you the edge you need to win consistently.
+                  {t('analyticsPlatformDesc')}
                 </Typography>
                 
                 <GlowingButtonWrapper
@@ -950,7 +964,7 @@ function HomePage() {
                     onClick={handleJoinClick}
                     showArrow={true}
                   >
-                    Join Our Winning Team
+                    {t('joinOurWinningTeam')}
                   </CustomButton>
                 </GlowingButtonWrapper>
               </Box>
@@ -988,12 +1002,10 @@ function HomePage() {
                     fontWeight: 600,
                     marginBottom: 1
                   }}>
-                    AI + Experience
+                    {t('aiExperienceTitle')}
                   </Typography>
-                  <FeatureDescription>
-                  A lethal combo of advanced AI systems and analysts with 20 years of sharp betting experience.
-                  <br/>
-                  <strong>This isn’t guessing. It’s calculated execution.</strong>
+                  <FeatureDescription sx={{ whiteSpace: 'pre-line' }}>
+                    {t('aiExperienceDesc')}
                   </FeatureDescription>
                 </FeatureCard>
               </Grid>
@@ -1029,15 +1041,10 @@ function HomePage() {
                     fontWeight: 600,
                     marginBottom: 1
                   }}>                  
-                  Premium Blogs for Those Who Don’t Settle for “Good Luck”
+                    {t('premiumBlogsTitle')}
                   </Typography>
-                  <FeatureDescription>
-                  Want to know why a pick makes sense?
-                  <br/>
-                  Our blog cuts through games like a blade through stats.
-                  <br/>
-                  <strong>Knowledge is power — and here, it’s premium.
-                  </strong> 
+                  <FeatureDescription sx={{ whiteSpace: 'pre-line' }}>
+                    {t('premiumBlogsDesc')}
                   </FeatureDescription>
                 </FeatureCard>
               </Grid>
@@ -1073,12 +1080,10 @@ function HomePage() {
                     fontWeight: 600,
                     marginBottom: 1
                   }}>
-                  Telegram Group You Don’t Share with Friends
-          </Typography>
-                  <FeatureDescription>
-                  This is where the odds are still high when they reach you.
-                  Live tips, insider info, and a community that lives and breathes data.
-              <strong>If you’re inside — you feel it before the market moves..</strong>
+                    {t('telegramGroupTitle')}
+                  </Typography>
+                  <FeatureDescription sx={{ whiteSpace: 'pre-line' }}>
+                    {t('telegramGroupDesc')}
                   </FeatureDescription>
                 </FeatureCard>
               </Grid>
@@ -1092,6 +1097,7 @@ function HomePage() {
         py: 15,
         position: 'relative',
         overflow: 'hidden',
+        background: 'linear-gradient(180deg, rgba(19, 47, 76, 0.6) 0%, rgba(10, 25, 41, 0.7) 100%)',
         '&::before': {
           content: '""',
           position: 'absolute',
@@ -1109,102 +1115,95 @@ function HomePage() {
           '&:hover': {
             transform: 'scale(1.1)',
           }
-        },
-        '&::after': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'linear-gradient(180deg, rgba(19, 47, 76, 0.6) 0%, rgba(10, 25, 41, 0.7) 100%)',
-          zIndex: 1
         }
       }}>
         <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 2 }}>
-          <Typography 
-            variant="h2" 
-            align="center" 
-            sx={{ 
-              mb: 12,
-              fontSize: { xs: '2.5rem', md: '3.5rem' },
-              fontWeight: 700,
-              background: 'linear-gradient(45deg, #ffffff 30%, #48CAE4 90%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              textShadow: '0 2px 4px rgba(0,0,0,0.2)',
-              position: 'relative',
-              '&::after': {
-                content: '""',
-                position: 'absolute',
-                bottom: '-20px',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                width: '100px',
-                height: '4px',
-                background: 'linear-gradient(90deg, transparent, #00B4D8, transparent)',
-                borderRadius: '2px'
-              }
-            }}
-          >
-            How It Works
+          <Typography variant="h2" component="h2" sx={{ 
+            color: 'white', 
+            textAlign: 'center', 
+            mb: 2, 
+            whiteSpace: 'pre-line',
+            fontSize: { xs: '2rem', md: '2.5rem' },
+            fontWeight: 700,
+            textShadow: '0 2px 4px rgba(0,0,0,0.2)'
+          }}>
+            {t('howItWorksTitle')}
+          </Typography>
+          <Typography variant="h5" component="p" sx={{ 
+            color: 'rgba(255, 255, 255, 0.8)', 
+            textAlign: 'center', 
+            mb: 6, 
+            whiteSpace: 'pre-line',
+            fontSize: { xs: '1.1rem', md: '1.25rem' }
+          }}>
+            {t('howItWorksSubtitle')}
           </Typography>
 
-          <Box sx={{ 
-            maxWidth: '900px', 
-            mx: 'auto',
-            position: 'relative',
-            '&::before': {
-              content: '""',
-              position: 'absolute',
-              top: '-20px',
-              left: '-20px',
-              right: '-20px',
-              bottom: '-20px',
-              background: 'radial-gradient(circle at 50% 50%, rgba(0, 180, 216, 0.1) 0%, transparent 70%)',
-              zIndex: -1,
-              borderRadius: '24px'
-            }
-          }}>
-            {[
-              {
-                number: '1',
-                title: 'Join the Inner Circle',
-                description: 'Become part of our exclusive community of smart bettors.'
-              },
-              {
-                number: '2',
-                title: 'Get Early Game Intelligence',
-                description: 'Receive real-time alerts with deep analytics on matches across multiple leagues — long before the market reacts.'
-              },
-              {
-                number: '3',
-                title: 'Profit with Precision',
-                description: 'Make informed bets backed by data and expertise — and watch your edge grow.'
-              }
-            ].map((step) => (
-              <StepWrapper key={step.number}>
-                <StepNumber>{step.number}</StepNumber>
-                <StepContent>
-                  <StepHighlight />
-                  <StepTitle variant="h3">
-                    {step.title}
-                  </StepTitle>
-                  <Typography
-                    sx={{
-                      color: 'rgba(255, 255, 255, 0.85)',
-                      fontSize: '1.1rem',
-                      lineHeight: 1.6,
-                      position: 'relative',
-                      zIndex: 1
-                    }}
-                  >
-                    {step.description}
-                  </Typography>
-                </StepContent>
-              </StepWrapper>
-            ))}
-          </Box>
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={4}>
+              <StepCard>
+                <StepNumber>1</StepNumber>
+                <Typography variant="h5" component="h3" sx={{ 
+                  color: 'white', 
+                  mb: 2, 
+                  whiteSpace: 'pre-line',
+                  fontSize: '1.25rem',
+                  fontWeight: 600
+                }}>
+                  {t('step1Title')}
+                </Typography>
+                <Typography variant="body1" sx={{ 
+                  color: 'rgba(255, 255, 255, 0.8)', 
+                  whiteSpace: 'pre-line',
+                  fontSize: '1rem'
+                }}>
+                  {t('step1Desc')}
+                </Typography>
+              </StepCard>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <StepCard>
+                <StepNumber>2</StepNumber>
+                <Typography variant="h5" component="h3" sx={{ 
+                  color: 'white', 
+                  mb: 2, 
+                  whiteSpace: 'pre-line',
+                  fontSize: '1.25rem',
+                  fontWeight: 600
+                }}>
+                  {t('step2Title')}
+                </Typography>
+                <Typography variant="body1" sx={{ 
+                  color: 'rgba(255, 255, 255, 0.8)', 
+                  whiteSpace: 'pre-line',
+                  fontSize: '1rem'
+                }}>
+                  {t('step2Desc')}
+                </Typography>
+              </StepCard>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <StepCard>
+                <StepNumber>3</StepNumber>
+                <Typography variant="h5" component="h3" sx={{ 
+                  color: 'white', 
+                  mb: 2, 
+                  whiteSpace: 'pre-line',
+                  fontSize: '1.25rem',
+                  fontWeight: 600
+                }}>
+                  {t('step3Title')}
+                </Typography>
+                <Typography variant="body1" sx={{ 
+                  color: 'rgba(255, 255, 255, 0.8)', 
+                  whiteSpace: 'pre-line',
+                  fontSize: '1rem'
+                }}>
+                  {t('step3Desc')}
+                </Typography>
+              </StepCard>
+            </Grid>
+          </Grid>
         </Container>
       </Box>
 
@@ -1246,7 +1245,7 @@ function HomePage() {
               borderRadius: '2px'
             }
           }}>
-            Latest from Our Blog
+            {t('blogSectionTitle')}
           </Typography>
           
           {loading ? (
@@ -1345,7 +1344,7 @@ function HomePage() {
                 }
               }}
             >
-              View All Blog Posts
+              {t('viewAllPosts')}
             </CustomButton>
           </Box>
         </Container>
@@ -1414,7 +1413,7 @@ function HomePage() {
                 textShadow: '0 2px 20px rgba(0,0,0,0.5)'
               }}
             >
-              Bet Smarter. Win More.
+              {t('finalCallTitle')}
             </Typography>
             <Typography 
               sx={{ 
@@ -1423,10 +1422,11 @@ function HomePage() {
                 maxWidth: '600px',
                 mb: 4,
                 textShadow: '0 2px 10px rgba(0,0,0,0.3)',
-                fontWeight: 500
+                fontWeight: 500,
+                whiteSpace: 'pre-line'
               }}
             >
-              Stop guessing. Start betting with confidence — backed by data, experts, and real football passion.
+              {t('finalCallSubtitle')}
             </Typography>
             <GlowingButtonWrapper
               variants={buttonVariants}
@@ -1439,7 +1439,7 @@ function HomePage() {
                 onClick={handleJoinClick}
                 showArrow={true}
               >
-                Get Access Now
+                {t('getAccessNow')}
               </CustomButton>
             </GlowingButtonWrapper>
           </Box>

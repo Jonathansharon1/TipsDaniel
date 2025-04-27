@@ -23,6 +23,7 @@ const StyledButton = styled.button`
   overflow: hidden;
   cursor: pointer;
   font-family: 'Inter', 'Poppins', sans-serif;
+  text-transform: none;
   
   &::before {
     content: '';
@@ -88,6 +89,7 @@ const StyledLink = styled(Link)`
   position: relative;
   overflow: hidden;
   font-family: 'Inter', 'Poppins', sans-serif;
+  text-transform: none;
   
   &::before {
     content: '';

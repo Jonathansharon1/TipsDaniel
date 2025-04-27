@@ -10,42 +10,59 @@ import {
   ListItem,
   ListItemText,
   ListItemIcon,
-  useTheme
+  useTheme,
+  Paper
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Check as CheckIcon } from '@mui/icons-material';
+import { Check as CheckIcon, TrendingUp as TrendingUpIcon, People as PeopleIcon, Security as SecurityIcon } from '@mui/icons-material';
 import CustomButton from '../components/Button';
+import { useLanguage } from '../context/LanguageContext';
 
-const StyledCard = styled(Card)(({ theme }) => ({
-  background: 'rgba(19, 47, 76, 0.8)',
-  backdropFilter: 'blur(10px)',
-  borderRadius: '24px',
-  border: '1px solid rgba(255, 255, 255, 0.1)',
-  transition: 'all 0.3s ease',
+const StyledCard = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(4),
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
+  background: 'rgba(19, 47, 76, 0.8)',
+  border: '1px solid rgba(0, 180, 216, 0.2)',
+  borderRadius: '16px',
   position: 'relative',
   overflow: 'hidden',
-  
+  transition: 'all 0.3s ease-in-out',
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(3),
+    marginBottom: theme.spacing(2),
+  },
   '&::before': {
     content: '""',
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    height: '4px',
-    background: 'linear-gradient(90deg, #00B4D8, #48CAE4)',
+    bottom: 0,
+    background: 'linear-gradient(45deg, rgba(0, 180, 216, 0.1), rgba(72, 202, 228, 0.1))',
+    zIndex: -1
   },
   
   '&:hover': {
     transform: 'translateY(-8px)',
     boxShadow: '0 12px 40px rgba(0, 180, 216, 0.2)',
+    border: '1px solid rgba(0, 180, 216, 0.3)',
     
-    '&::before': {
-      height: '6px',
+    '& .price': {
+      transform: 'scale(1.05)',
+      background: 'linear-gradient(45deg, #00B4D8, #48CAE4)',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent'
     }
   }
+}));
+
+const PriceTypography = styled(Typography)(({ theme }) => ({
+  transition: 'all 0.3s ease',
+  background: 'linear-gradient(45deg, #ffffff, #48CAE4)',
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent'
 }));
 
 const FeatureIcon = styled(ListItemIcon)(({ theme }) => ({
@@ -57,19 +74,113 @@ const FeatureIcon = styled(ListItemIcon)(({ theme }) => ({
   }
 }));
 
+const DashboardCard = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(3),
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  background: 'rgba(255, 255, 255, 0.05)',
+  backdropFilter: 'blur(10px)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
+  borderRadius: '16px',
+  transition: 'all 0.3s ease',
+  '&:hover': {
+    transform: 'translateY(-5px)',
+    boxShadow: '0 8px 32px rgba(0, 180, 216, 0.2)',
+    border: '1px solid rgba(0, 180, 216, 0.3)',
+  }
+}));
+
+const DashboardIcon = styled(Box)(({ theme }) => ({
+  width: '48px',
+  height: '48px',
+  borderRadius: '12px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  background: 'linear-gradient(45deg, rgba(0, 180, 216, 0.2), rgba(72, 202, 228, 0.2))',
+  marginBottom: theme.spacing(2),
+  '& svg': {
+    fontSize: '24px',
+    color: '#00B4D8'
+  }
+}));
+
+const DashboardGrid = styled(Grid)(({ theme }) => ({
+  background: 'linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%)',
+  padding: theme.spacing(4),
+  borderRadius: '24px',
+  marginBottom: theme.spacing(6),
+  position: 'relative',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: 'linear-gradient(45deg, rgba(0, 180, 216, 0.1), rgba(72, 202, 228, 0.1))',
+    borderRadius: '24px',
+    zIndex: -1
+  }
+}));
+
+const DashboardTitle = styled(Typography)(({ theme }) => ({
+  color: '#fff',
+  fontSize: '1.5rem',
+  fontWeight: 600,
+  marginBottom: theme.spacing(1)
+}));
+
+const DashboardValue = styled(Typography)(({ theme }) => ({
+  color: '#00B4D8',
+  fontSize: '2rem',
+  fontWeight: 700,
+  marginBottom: theme.spacing(2)
+}));
+
+const DashboardDescription = styled(Typography)(({ theme }) => ({
+  color: 'rgba(255, 255, 255, 0.7)',
+  fontSize: '0.9rem',
+  lineHeight: 1.6
+}));
+
+const PricingCard = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(4),
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  background: 'rgba(255, 255, 255, 0.05)',
+  backdropFilter: 'blur(10px)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
+  borderRadius: '16px',
+  position: 'relative',
+  transition: 'all 0.3s ease',
+  '&:hover': {
+    transform: 'translateY(-5px)',
+    boxShadow: '0 8px 32px rgba(0, 180, 216, 0.2)',
+    border: '1px solid rgba(0, 180, 216, 0.3)',
+  }
+}));
+
+const RecommendedBadge = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  top: 16,
+  right: 16,
+  background: 'linear-gradient(45deg, #00B4D8, #48CAE4)',
+  color: 'white',
+  padding: theme.spacing(0.5, 2),
+  borderRadius: '12px',
+  fontSize: '0.875rem',
+  fontWeight: 600
+}));
+
 const plans = [
   {
     title: 'Monthly Plan',
     price: '$39',
     period: '/month',
     description: 'Just checking us out? Cool.\nThis plan gets you in the game with full access — no strings attached.',
-    features: [
-      'Access to basic predictions',
-      'Daily match analysis',
-      'Basic statistics',
-      'Email support',
-      'Mobile app access'
-    ],
     recommended: false
   },
   {
@@ -77,13 +188,6 @@ const plans = [
     price: '$32',
     period: '/month',
     description: 'Smart bettors think ahead.\nThis plan locks you in and saves you cash — a no-brainer if you\'re in it to win it.',
-    features: [
-      '15+ tips every week',
-      'Powered by AI & expert analysis',
-      '24/7 support in our Instagram channel',
-      'Fast access to all picks'
-    
-    ],
     recommended: true
   },
   {
@@ -91,20 +195,34 @@ const plans = [
     price: '$25',
     period: '/month',
     description: 'You\'re not here to play around. You\'re here to build.\nThis is our all-in plan for people who want full access, full consistency, and full confidence.',
-    features: [
-      'Everything in Pro',
-      'VIP predictions',
-      '1-on-1 support',
-      'Early access',
-      'Custom strategies',
-      'Exclusive content'
-    ],
     recommended: false
+  }
+];
+
+const features = [
+  {
+    icon: <TrendingUpIcon />,
+    title: 'Success Rate',
+    value: '78%',
+    description: 'Consistent winning predictions across all sports'
+  },
+  {
+    icon: <PeopleIcon />,
+    title: 'Community',
+    value: '15+',
+    description: 'Weekly expert recommendations from our team'
+  },
+  {
+    icon: <SecurityIcon />,
+    title: 'Reliability',
+    value: '24/7',
+    description: 'Round-the-clock support and updates'
   }
 ];
 
 function JoinPage() {
   const theme = useTheme();
+  const { t } = useLanguage();
 
   return (
     <Box sx={{ 
@@ -125,47 +243,70 @@ function JoinPage() {
         pointerEvents: 'none'
       }
     }}>
-      <Container maxWidth="lg">
-        <Box sx={{ textAlign: 'center', mb: 8 }}>
-          <Typography 
-            variant="h2" 
-            sx={{ 
-              fontSize: { xs: '2.5rem', md: '3.5rem' },
-              fontWeight: 700,
-              mb: 3,
-              background: 'linear-gradient(45deg, #ffffff 30%, #48CAE4 90%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              textShadow: '0 2px 20px rgba(0,0,0,0.5)'
-            }}
-          >
-            Choose Your Plan
+      <Container maxWidth="lg" sx={{ py: 8 }}>
+        <Typography
+          variant="h4"
+          component="h2"
+          sx={{
+            fontSize: { xs: '1.75rem', sm: '2rem', md: '2.5rem' },
+            fontWeight: 700,
+            mb: 4,
+            textAlign: 'center',
+            color: 'white'
+          }}
+        >
+          {t('join.title')}
+        </Typography>
+        <Typography
+          variant="h6"
+          sx={{
+            fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' },
+            mb: 6,
+            textAlign: 'center',
+            color: 'rgba(255, 255, 255, 0.8)'
+          }}
+        >
+          {t('join.subtitle')}
+        </Typography>
+
+        <Box sx={{
+          background: 'rgba(19, 47, 76, 0.7)',
+          borderRadius: '18px',
+          boxShadow: '0 2px 16px 0 rgba(0,180,216,0.10)',
+          p: { xs: 2, sm: 4 },
+          mb: 5,
+          maxWidth: 1000,
+          mx: 'auto',
+          mt: 4,
+        }}>
+          <Typography variant="h5" fontWeight={700} color="#fff" mb={2} textAlign="center">
+            {t('join.whatWeOffer')}
           </Typography>
-          <Typography 
-            sx={{ 
-              fontSize: '1.25rem',
-              color: 'rgba(255, 255, 255, 0.9)',
-              maxWidth: '600px',
-              mx: 'auto',
-              mb: 4
-            }}
-          >
-            Select the perfect plan for your betting journey. All plans include our core features with additional benefits as you upgrade.
-          </Typography>
+          <List sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: { xs: 1, sm: 3 },
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            p: 0,
+            m: 0,
+          }}>
+            {Object.values(t('join.features')).map((feature, idx) => (
+              <ListItem key={idx} sx={{ width: 'auto', color: '#fff', p: 0, m: 0 }}>
+                <FeatureIcon>
+                  <CheckIcon />
+                </FeatureIcon>
+                <ListItemText primary={feature} primaryTypographyProps={{ fontSize: 17, fontWeight: 500 }} />
+              </ListItem>
+            ))}
+          </List>
         </Box>
 
         <Grid container spacing={4}>
-          {plans.map((plan) => (
-            <Grid item xs={12} md={4} key={plan.title}>
-              <StyledCard 
-                sx={{ 
-                  transform: plan.recommended ? 'scale(1.05)' : 'none',
-                  zIndex: plan.recommended ? 1 : 0,
-                  '&:hover': {
-                    transform: plan.recommended ? 'scale(1.08) translateY(-8px)' : 'translateY(-8px)'
-                  }
-                }}
-              >
+          {Object.entries(t('join.plans')).map(([key, plan]) => (
+            <Grid item xs={12} md={4} key={key}>
+              <StyledCard>
                 <CardContent sx={{ p: 4, height: '100%', display: 'flex', flexDirection: 'column' }}>
                   {plan.recommended && (
                     <Box
@@ -182,7 +323,7 @@ function JoinPage() {
                         fontWeight: 600
                       }}
                     >
-                      Recommended
+                      {t('join.recommended')}
                     </Box>
                   )}
                   <Typography 
@@ -197,17 +338,17 @@ function JoinPage() {
                     {plan.title}
                   </Typography>
                   <Box sx={{ display: 'flex', alignItems: 'baseline', mb: 2 }}>
-                    <Typography 
+                    <PriceTypography 
                       variant="h4" 
                       component="span" 
+                      className="price"
                       sx={{ 
-                        color: 'white',
                         fontWeight: 'bold',
                         mr: 1
                       }}
                     >
                       {plan.price}
-                    </Typography>
+                    </PriceTypography>
                     <Typography 
                       variant="body1" 
                       sx={{ 
@@ -228,25 +369,6 @@ function JoinPage() {
                     {plan.description}
                   </Typography>
 
-                  <List sx={{ mb: 4, flex: 1 }}>
-                    {plan.features.map((feature) => (
-                      <ListItem key={feature} sx={{ px: 0 }}>
-                        <FeatureIcon>
-                          <CheckIcon />
-                        </FeatureIcon>
-                        <ListItemText
-                          primary={feature}
-                          sx={{
-                            '& .MuiListItemText-primary': {
-                              color: 'rgba(255, 255, 255, 0.9)',
-                              fontSize: '1rem'
-                            }
-                          }}
-                        />
-                        
-                      </ListItem>
-                    ))}
-                  </List>
                   <CustomButton 
                     fullWidth 
                     showArrow={true}
@@ -257,7 +379,7 @@ function JoinPage() {
                         : 'linear-gradient(45deg, rgba(0, 180, 216, 0.8), rgba(72, 202, 228, 0.8))'
                     }}
                   >
-                    Get Started
+                    {t('join.getStarted')}
                   </CustomButton>
                 </CardContent>
               </StyledCard>

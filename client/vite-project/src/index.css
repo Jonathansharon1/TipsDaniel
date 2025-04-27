@@ -1,5 +1,5 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -80,14 +80,16 @@ img {
 
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
-  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0;
 }
 
 p {
   font-family: 'Inter', sans-serif;
   line-height: 1.6;
+  margin: 0;
 }
 
 /* Button styles */

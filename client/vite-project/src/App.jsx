@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
+import { LanguageProvider } from './context/LanguageContext';
 import HomePage from './pages/HomePage';
 import BlogPage from './pages/BlogPage';
 import PostDetailPage from './pages/PostDetailPage';
@@ -33,49 +34,39 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: "'Inter', 'Poppins', sans-serif",
+    fontFamily: "'Inter', sans-serif",
     h1: {
-      fontFamily: "'Poppins', sans-serif",
+      fontFamily: "'Inter', sans-serif",
       fontWeight: 700,
-      letterSpacing: '-0.02em',
     },
     h2: {
-      fontFamily: "'Poppins', sans-serif",
+      fontFamily: "'Inter', sans-serif",
       fontWeight: 600,
-      letterSpacing: '-0.02em',
     },
     h3: {
-      fontFamily: "'Poppins', sans-serif",
+      fontFamily: "'Inter', sans-serif",
       fontWeight: 600,
-      letterSpacing: '-0.02em',
     },
     h4: {
-      fontFamily: "'Poppins', sans-serif",
+      fontFamily: "'Inter', sans-serif",
       fontWeight: 600,
-      letterSpacing: '-0.02em',
     },
     h5: {
-      fontFamily: "'Poppins', sans-serif",
+      fontFamily: "'Inter', sans-serif",
       fontWeight: 600,
-      letterSpacing: '-0.02em',
     },
     h6: {
-      fontFamily: "'Poppins', sans-serif",
+      fontFamily: "'Inter', sans-serif",
       fontWeight: 600,
-      letterSpacing: '-0.02em',
     },
     body1: {
       fontFamily: "'Inter', sans-serif",
-      lineHeight: 1.6,
     },
     body2: {
       fontFamily: "'Inter', sans-serif",
-      lineHeight: 1.6,
     },
     button: {
-      fontFamily: "'Inter', 'Poppins', sans-serif",
-      fontWeight: 600,
-      textTransform: 'none',
+      fontFamily: "'Inter', sans-serif",
     },
   },
   components: {
@@ -97,16 +88,18 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Router>
-        <NavBar />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/blog" element={<BlogPage />} />
-          <Route path="/blog/:id" element={<PostDetailPage />} />
-          <Route path="/join" element={<JoinPage />} />
-          <Route path="/admin" element={<AdminPage />} />
-        </Routes>
-      </Router>
+      <LanguageProvider>
+        <Router>
+          <NavBar />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/blog/:id" element={<PostDetailPage />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/join" element={<JoinPage />} />
+          </Routes>
+        </Router>
+      </LanguageProvider>
     </ThemeProvider>
   );
 }
