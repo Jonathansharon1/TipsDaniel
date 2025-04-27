@@ -424,22 +424,6 @@ const NavBar = () => {
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Button
               component={Link}
-              to="/"
-              onClick={handleDrawerToggle}
-              sx={{
-                color: 'white',
-                textTransform: 'none',
-                fontSize: '1.1rem',
-                justifyContent: 'flex-start',
-                '&:hover': {
-                  color: 'primary.main',
-                },
-              }}
-            >
-              Home
-            </Button>
-            <Button
-              component={Link}
               to="/features"
               onClick={handleDrawerToggle}
               sx={{
