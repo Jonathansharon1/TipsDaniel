@@ -423,9 +423,7 @@ const NavBar = () => {
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Button
-              component={Link}
-              to="/features"
-              onClick={handleDrawerToggle}
+              onClick={() => handleSectionClick('features')}
               sx={{
                 color: 'white',
                 textTransform: 'none',
@@ -439,9 +437,7 @@ const NavBar = () => {
               {t('whyUs')}
             </Button>
             <Button
-              component={Link}
-              to="/how-it-works"
-              onClick={handleDrawerToggle}
+              onClick={() => handleSectionClick('how-it-works')}
               sx={{
                 color: 'white',
                 textTransform: 'none',
