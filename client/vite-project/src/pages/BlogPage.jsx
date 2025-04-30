@@ -25,8 +25,8 @@ import { Search } from '@mui/icons-material';
 import axios from 'axios';
 import Button from '../components/Button';
 import { styled } from '@mui/material/styles';
-import { useLanguage } from '../context/LanguageContext';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { useLanguage } from '../context/LanguageContext';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   height: '100%',
@@ -202,6 +202,7 @@ const GlassFormControl = styled(FormControl)(({ theme }) => ({
     fontSize: '1.2rem',
     border: 'none',
     boxShadow: 'none',
+    paddingLeft: 8,
     '& fieldset': {
       border: 'none',
     },
@@ -211,31 +212,49 @@ const GlassFormControl = styled(FormControl)(({ theme }) => ({
     fontSize: '1.1rem',
     background: 'rgba(36,44,66,0.95)',
     px: 0.5,
-    borderRadius: 12,
-    marginLeft: 8,
-    marginTop: 2,
   },
   '& .MuiSelect-select': {
     color: '#fff',
-    borderRadius: 24,
+    borderRadius: 18,
     background: 'rgba(36, 44, 66, 0.95)',
-    fontSize: '1.2rem',
-    padding: '16px 20px',
+    fontSize: '1.1rem',
   },
 }));
 
-const GlassCard = styled(Card)(({ theme }) => ({
-  borderRadius: 28,
-  background: 'rgba(36, 44, 66, 0.95)',
-  color: '#fff',
-  boxShadow: '0 8px 32px 0 rgba(0,0,0,0.18)',
+const GlassCard = styled(Box)(({ theme }) => ({
+  background: 'rgba(19, 47, 76, 0.8)',
+  border: '1px solid rgba(0, 180, 216, 0.2)',
+  borderRadius: '16px',
+  padding: theme.spacing(3),
+  height: '100%',
   display: 'flex',
   flexDirection: 'column',
-  height: '100%',
-  overflow: 'hidden',
-  border: 'none',
-  padding: 32,
+  transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+  '&:hover': {
+    transform: 'translateY(-5px)',
+    boxShadow: '0 8px 20px rgba(0, 180, 216, 0.2)',
+  },
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(2),
+    borderRadius: '12px',
+  }
+}));
+
+const BlogImage = styled('img')(({ theme }) => ({
+  width: '100%',
+  height: '250px',
+  objectFit: 'cover',
+  borderRadius: '12px',
   marginBottom: theme.spacing(2),
+  transition: 'transform 0.3s ease-in-out',
+  '&:hover': {
+    transform: 'scale(1.02)',
+  },
+  [theme.breakpoints.down('sm')]: {
+    height: '200px',
+    borderRadius: '8px',
+    marginBottom: theme.spacing(1.5),
+  }
 }));
 
 const GlassChip = styled(Chip)(({ theme }) => ({
@@ -273,64 +292,57 @@ const GlassReadMore = styled(Button)(({ theme }) => ({
 
 const BlogPage = () => {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const [allPosts, setAllPosts] = useState({});
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [categories, setCategories] = useState(['All']);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [categories, setCategories] = useState([]);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
-  // Debounce search term
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-    }, 500); // Increased debounce time to 500ms for better performance
-
-    return () => clearTimeout(timer);
-  }, [searchTerm]);
-
-  // Fetch posts when debounced search term or category changes
+  // Fetch all posts once
   useEffect(() => {
     const fetchPosts = async () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/blog/posts`, {
-          params: {
-            search: debouncedSearchTerm,
-            category: selectedCategory === 'All' ? '' : selectedCategory
-          }
-        });
-        setPosts(response.data.data);
-      } catch (error) {
-        setError('Failed to load posts. Please try again later.');
+        const response = await axios.get('https://surebetapp-b6984bb7acd6.herokuapp.com/all_blogs');
+        if (response.data && response.data.data) {
+          setAllPosts(response.data.data);
+          console.log('Fetched allPosts:', response.data.data);
+        } else {
+          setError('Failed to fetch posts');
+        }
+      } catch (err) {
+        setError('Failed to fetch posts');
       } finally {
         setLoading(false);
       }
     };
-
     fetchPosts();
-  }, [debouncedSearchTerm, selectedCategory]);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/blog/posts/categories`);
-        const filteredCategories = response.data.data.filter(Boolean);
-        const uniqueCategories = [...new Set(filteredCategories)].filter(cat => cat !== 'All');
-        setCategories(['All', ...uniqueCategories]);
-      } catch (error) {
-        setError('Failed to load categories. Please try again later.');
-      }
-    };
-
-    fetchCategories();
   }, []);
+
+  // Update posts and categories when language or allPosts changes
+  useEffect(() => {
+    const currentLang = language || 'en';
+    console.log('Current language:', currentLang);
+    const languagePosts = allPosts[currentLang] || [];
+    console.log('Posts for current language:', languagePosts);
+    
+    // Sort posts by date (most recent first)
+    const sortedPosts = [...languagePosts].sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return dateB - dateA;
+    });
+    
+    setPosts(sortedPosts);
+    const uniqueCategories = [...new Set(languagePosts.map(post => post.category))];
+    setCategories(uniqueCategories);
+  }, [allPosts, language]);
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -342,8 +354,8 @@ const BlogPage = () => {
 
   const filteredPosts = posts.filter(post => {
     const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         post.content.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'All' || post.category === selectedCategory;
+      (post.main_paragraph && post.main_paragraph.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesCategory = selectedCategory === 'all' || post.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
@@ -368,7 +380,7 @@ const BlogPage = () => {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 8 }}>
+    <Container maxWidth="lg" sx={{ py: { xs: 2, md: 4 }, px: { xs: 1, sm: 2, md: 3 } }}>
       <Typography
         variant="h4"
         component="h1"
@@ -408,7 +420,7 @@ const BlogPage = () => {
         <GlassSearchField
           variant="outlined"
           size="medium"
-          placeholder={t('search')}
+          placeholder={t('search') || 'Search'}
           value={searchTerm}
           onChange={handleSearch}
           InputProps={{
@@ -420,90 +432,96 @@ const BlogPage = () => {
           }}
         />
         <GlassFormControl size="medium">
-          <InputLabel>{t('categories')}</InputLabel>
+          <InputLabel>{t('categories') || 'Categories'}</InputLabel>
           <Select
             value={selectedCategory}
             onChange={handleCategoryChange}
-            label={t('categories')}
+            label={t('categories') || 'Categories'}
             MenuProps={{
               PaperProps: {
                 sx: { background: 'rgba(36, 44, 66, 0.98)', color: '#fff', borderRadius: 3 }
               }
             }}
           >
+            <MenuItem value="all">{t('all') || 'All'}</MenuItem>
             {categories.map((cat) => (
               <MenuItem key={cat} value={cat}>{cat}</MenuItem>
             ))}
           </Select>
         </GlassFormControl>
       </Box>
-      <Grid container spacing={5}>
+      <Grid container spacing={{ xs: 2, md: 4 }}>
         {filteredPosts.length === 0 ? (
           <Grid item xs={12}>
-            <Alert severity="info" sx={{ mt: 4, textAlign: 'center', background: 'rgba(0,180,216,0.08)', color: '#00B4D8', borderRadius: 2, fontSize: '1.2rem', py: 4 }}>
+            <Alert severity="info" sx={{ 
+              mt: 4, 
+              textAlign: 'center', 
+              background: 'rgba(0,180,216,0.08)', 
+              color: '#00B4D8', 
+              borderRadius: 2, 
+              fontSize: { xs: '1rem', md: '1.2rem' }, 
+              py: { xs: 2, md: 4 } 
+            }}>
               {t('noPostsFound') || 'No posts found matching your search.'}
             </Alert>
           </Grid>
         ) : (
           filteredPosts.map((post) => (
-            <Grid item xs={12} sm={6} md={4} key={post._id}>
+            <Grid item xs={12} sm={6} md={4} key={post.blog_id}>
               <GlassCard>
-                <CardContent sx={{ flexGrow: 1, pb: 0, p: 0 }}>
-                  <Typography
-                    gutterBottom
-                    variant="h4"
-                    component="h2"
-                    sx={{
-                      fontSize: '1.3rem',
-                      mb: 2,
-                      color: '#fff',
-                      fontWeight: 700,
-                      letterSpacing: '-0.01em',
-                      lineHeight: 1.18,
-                    }}
-                  >
-                    {post.title}
-                  </Typography>
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      fontSize: '1.05rem',
-                      mb: 2,
-                      color: '#bfc9db',
-                      fontWeight: 400,
-                      lineHeight: 1.5,
-                    }}
-                  >
-                    {post.excerpt}
-                  </Typography>
-                  {post.content && (
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        fontSize: '0.98rem',
-                        mb: 2,
-                        color: '#bfc9db',
-                        fontWeight: 400,
-                        lineHeight: 1.5,
-                        opacity: 0.85,
-                      }}
-                    >
-                      {post.content.slice(0, 120)}{post.content.length > 120 ? '...' : ''}
-                    </Typography>
-                  )}
-                  {post.category && (
-                    <GlassChip label={post.category} sx={{ mb: 3 }} />
-                  )}
-                </CardContent>
-                <Box sx={{ flexGrow: 1 }} />
-                <Box sx={{ pt: 2 }}>
-                  <GlassReadMore
-                    fullWidth
-                    onClick={() => handleReadMore(post._id)}
-                  >
-                    {t('readMore')}
-                  </GlassReadMore>
-                </Box>
+                {post.main_image && (
+                  <BlogImage
+                    src={post.main_image}
+                    alt={post.title}
+                    loading="lazy"
+                  />
+                )}
+                <Typography
+                  gutterBottom
+                  variant="h4"
+                  component="h2"
+                  sx={{
+                    fontSize: { xs: '1.2rem', md: '1.3rem' },
+                    mb: { xs: 1, md: 2 },
+                    color: '#fff',
+                    fontWeight: 700,
+                    letterSpacing: '-0.01em',
+                    lineHeight: 1.18,
+                  }}
+                >
+                  {post.title}
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    fontSize: { xs: '0.95rem', md: '1.05rem' },
+                    mb: { xs: 1.5, md: 2 },
+                    color: '#bfc9db',
+                    fontWeight: 400,
+                    lineHeight: 1.5,
+                    flexGrow: 1,
+                  }}
+                >
+                  {post.main_paragraph && post.main_paragraph.length > 150
+                    ? post.main_paragraph.slice(0, 150) + '...'
+                    : post.main_paragraph}
+                </Typography>
+                {post.category && (
+                  <Chip 
+                    label={post.category} 
+                    sx={{ 
+                      mb: { xs: 1.5, md: 2 }, 
+                      background: 'rgba(191, 201, 219, 0.15)', 
+                      color: '#bfc9db', 
+                      fontWeight: 600,
+                      fontSize: { xs: '0.8rem', md: '0.875rem' },
+                      height: { xs: '24px', md: '32px' }
+                    }} 
+                  />
+                )}
+                <GlassReadMore onClick={() => handleReadMore(post.blog_id)}>
+                  {t('readMore') || 'Read More'}
+                </GlassReadMore>
               </GlassCard>
             </Grid>
           ))
