@@ -443,14 +443,60 @@ const GlowingButtonWrapper = styled(motion.div)(({ theme }) => ({
   }
 }));
 
+const GlassCard = styled(Paper)(({ theme }) => ({
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  padding: theme.spacing(3),
+  background: 'rgba(19, 47, 76, 0.3)',
+  backdropFilter: 'blur(10px)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
+  borderRadius: '16px',
+  transition: 'all 0.3s ease-in-out',
+  '&:hover': {
+    transform: 'translateY(-5px)',
+    boxShadow: '0 8px 32px rgba(0, 180, 216, 0.2)',
+    background: 'rgba(19, 47, 76, 0.4)',
+    border: '1px solid rgba(0, 180, 216, 0.3)',
+  }
+}));
+
+const BlogImage = styled('img')(({ theme }) => ({
+  width: '100%',
+  height: '200px',
+  objectFit: 'cover',
+  borderRadius: '12px',
+  marginBottom: theme.spacing(2),
+  transition: 'transform 0.3s ease-in-out',
+  '&:hover': {
+    transform: 'scale(1.02)'
+  }
+}));
+
+const GlassReadMore = styled(Button)(({ theme }) => ({
+  color: '#00B4D8',
+  background: 'rgba(0, 180, 216, 0.1)',
+  border: '1px solid rgba(0, 180, 216, 0.2)',
+  borderRadius: '8px',
+  padding: theme.spacing(1, 2),
+  marginTop: 'auto',
+  transition: 'all 0.3s ease-in-out',
+  '&:hover': {
+    background: 'rgba(0, 180, 216, 0.2)',
+    transform: 'translateY(-2px)',
+    boxShadow: '0 4px 12px rgba(0, 180, 216, 0.2)'
+  }
+}));
+
 function HomePage() {
   const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
+  const [allPosts, setAllPosts] = useState({});
   const [latestPosts, setLatestPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   useEffect(() => {
     // Check if we need to scroll to a section (when navigating from another page)
@@ -472,10 +518,12 @@ function HomePage() {
     const fetchLatestPosts = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/blog/posts`);
-        // Get only the latest 2 posts from the database
-        const dbPosts = response.data.data.filter(post => post._id); // Only show posts with an _id (from DB)
-        setLatestPosts(dbPosts.slice(0, 2));
+        const response = await axios.get('https://surebetapp-b6984bb7acd6.herokuapp.com/all_blogs');
+        if (response.data && response.data.data) {
+          setAllPosts(response.data.data);
+        } else {
+          setError('Failed to fetch posts');
+        }
       } catch (err) {
         console.error('Error fetching latest posts:', err);
         setError('Failed to load latest blog posts');
@@ -486,6 +534,23 @@ function HomePage() {
 
     fetchLatestPosts();
   }, []);
+
+  // Update latest posts when language or allPosts changes
+  useEffect(() => {
+    const currentLang = language || 'en';
+    const languagePosts = allPosts[currentLang] || [];
+    
+    // Sort posts by date (most recent first) and take only 2
+    const sortedPosts = [...languagePosts]
+      .sort((a, b) => {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        return dateB - dateA;
+      })
+      .slice(0, 2); // Take only the 2 most recent posts
+    
+    setLatestPosts(sortedPosts);
+  }, [allPosts, language]);
 
   const handleJoinClick = () => {
     navigate('/join');
@@ -1208,22 +1273,18 @@ function HomePage() {
       </Box>
 
       {/* Blog Section */}
-      <Box id="blog" sx={{ 
-        py: 20, 
-        borderTop: 1, 
-        borderColor: 'divider', 
-        bgcolor: 'background.paper',
+      <Box id="blog" sx={{
+        py: { xs: 6, md: 10 },
+        background: 'linear-gradient(180deg, rgba(19,47,76,0.5) 0%, rgba(19,47,76,0.8) 100%)',
         position: 'relative',
-        overflow: 'hidden',
         '&::before': {
           content: '""',
           position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
-          bottom: 0,
-          background: 'radial-gradient(circle at 50% 100%, rgba(0, 180, 216, 0.15) 0%, transparent 70%)',
-          pointerEvents: 'none'
+          height: '1px',
+          background: 'linear-gradient(90deg, transparent, rgba(0,180,216,0.3), transparent)',
         }
       }}>
         <Container maxWidth="lg">
@@ -1257,76 +1318,62 @@ function HomePage() {
           ) : (
             <Grid container spacing={4}>
               {latestPosts.map((post) => (
-                <Grid item key={post._id} xs={12} sm={6} md={4}>
-                  <FeatureCard>
-                    {post.imageUrl && (
-                      <CardMedia
-                        component="img"
-                        height="200"
-                        image={post.imageUrl}
+                <Grid item xs={12} md={6} key={post.blog_id}>
+                  <GlassCard>
+                    {post.main_image && (
+                      <BlogImage
+                        src={post.main_image}
                         alt={post.title}
-                        sx={{
-                          objectFit: 'cover',
-                          borderRadius: '8px',
-                          mb: 2,
-                          transition: 'transform 0.3s ease-in-out',
-                          '&:hover': {
-                            transform: 'scale(1.05)'
-                          }
-                        }}
+                        loading="lazy"
                       />
                     )}
-                    <CardContent>
-                      <Typography 
-                        variant="h6" 
-                        gutterBottom
-                        sx={{
-                          color: 'white',
-                          fontWeight: 600,
-                          fontSize: { xs: '1.1rem', sm: '1.25rem' },
-                          mb: 2
-                        }}
-                      >
-                        {post.title}
-                      </Typography>
-                      <Typography 
-                        variant="body2" 
+                    <Typography
+                      gutterBottom
+                      variant="h4"
+                      component="h2"
+                      sx={{
+                        fontSize: { xs: '1.2rem', md: '1.3rem' },
+                        mb: { xs: 1, md: 2 },
+                        color: '#fff',
+                        fontWeight: 700,
+                        letterSpacing: '-0.01em',
+                        lineHeight: 1.18,
+                      }}
+                    >
+                      {post.title}
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        fontSize: { xs: '0.95rem', md: '1.05rem' },
+                        mb: { xs: 1.5, md: 2 },
+                        color: '#bfc9db',
+                        fontWeight: 400,
+                        lineHeight: 1.5,
+                        flexGrow: 1,
+                      }}
+                    >
+                      {post.main_paragraph && post.main_paragraph.length > 150
+                        ? post.main_paragraph.slice(0, 150) + '...'
+                        : post.main_paragraph}
+                    </Typography>
+                    {post.category && (
+                      <Chip 
+                        label={post.category} 
                         sx={{ 
-                          color: 'rgba(255, 255, 255, 0.7)',
-                          mb: 2,
-                          fontSize: { xs: '0.875rem', sm: '1rem' }
-                        }}
-                      >
-                        {post.content.substring(0, 150)}...
-                      </Typography>
-                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
-                        <Chip 
-                          label={post.category} 
-                          size="small" 
-                          sx={{ 
-                            background: 'rgba(0, 180, 216, 0.1)',
-                            color: 'primary.light',
-                            '&:hover': {
-                              background: 'rgba(0, 180, 216, 0.2)'
-                            }
-                          }} 
-                        />
-                        <CustomButton
-                          variant="text"
-                          onClick={() => handleReadMore(post._id)}
-                          endIcon={<ArrowForward />}
-                          sx={{
-                            color: 'primary.light',
-                            '&:hover': {
-                              background: 'rgba(0, 180, 216, 0.1)'
-                            }
-                          }}
-                        >
-                          Read More
-                        </CustomButton>
-                      </Box>
-                    </CardContent>
-                  </FeatureCard>
+                          mb: { xs: 1.5, md: 2 }, 
+                          background: 'rgba(191, 201, 219, 0.15)', 
+                          color: '#bfc9db', 
+                          fontWeight: 600,
+                          fontSize: { xs: '0.8rem', md: '0.875rem' },
+                          height: { xs: '24px', md: '32px' }
+                        }} 
+                      />
+                    )}
+                    <GlassReadMore onClick={() => handleReadMore(post.blog_id)}>
+                      {t('readMore') || 'Read More'}
+                    </GlassReadMore>
+                  </GlassCard>
                 </Grid>
               ))}
             </Grid>
