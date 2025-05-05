@@ -9,6 +9,8 @@ import PostDetailPage from './pages/PostDetailPage';
 import AdminPage from './pages/AdminPage';
 import NavBar from './components/NavBar';
 import JoinPage from './pages/JoinPage';
+import TermsOfUsePage from './pages/TermsOfUsePage';
+import Footer from './components/Footer';
 
 // Create a theme instance
 const theme = createTheme({
@@ -97,7 +99,9 @@ function App() {
             <Route path="/blog/:id" element={<PostDetailPage />} />
             <Route path="/admin" element={<AdminPage />} />
             <Route path="/join" element={<JoinPage />} />
+            <Route path="/terms" element={<TermsOfUsePage />} />
           </Routes>
+          <Footer />
         </Router>
       </LanguageProvider>
     </ThemeProvider>

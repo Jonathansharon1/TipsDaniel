@@ -113,7 +113,23 @@ export const translations = {
       },
       recommended: 'Recommended',
       getStarted: 'Get Started'
-    }
+    },
+    postsYouMightLike: "Posts You Might Like",
+    termsOfUse: "Terms of Use",
+    termsOfUseTitle: "Terms of Use – TipsDaniel",
+    termsOfUseWelcome: "Welcome to TipsDaniel. By using this site and our content (VIP tips, blogs, stats, and graphics), you agree to the following:",
+    termsOfUse1Title: "1. Just Smart Opinions",
+    termsOfUse1Content: "Everything you see here is based on analysis, expert thinking, and our AI engine. These are insights — not guarantees, not financial advice. Use them wisely, but remember: the final decision is always yours.",
+    termsOfUse2Title: "2. No Guarantees, No Blame",
+    termsOfUse2Content: "We aim to be accurate, insightful, and ahead of the curve. But results in sports are unpredictable — TipsDaniel is not responsible for any financial loss resulting from using our content.",
+    termsOfUse3Title: "3. For Adults Only",
+    termsOfUse3Content: "Our content is intended for users aged 18+.",
+    termsOfUse4Title: "4. Respecting Your Privacy",
+    termsOfUse4Content: "We do not collect or sell your personal data. Anonymous data might be used to improve site performance and user experience.",
+    termsOfUse5Title: "5. We May Update Things",
+    termsOfUse5Content: "We reserve the right to update these terms at any time. Stay smart and stay informed.",
+    termsOfUseFooter: "If you don't agree with our terms — please do not use this site.\nOtherwise, welcome to the team.",
+    termsOfUseJoinNote: "Before purchasing, please review our Terms of Use!"
   },
   es: {
     // Navigation
@@ -229,7 +245,23 @@ export const translations = {
       },
       recommended: 'Recomendado',
       getStarted: 'Comenzar'
-    }
+    },
+    postsYouMightLike: "Publicaciones que te pueden gustar",
+    termsOfUse: "Términos de Uso",
+    termsOfUseTitle: "Términos de Uso – TipsDaniel",
+    termsOfUseWelcome: "Bienvenido a TipsDaniel. Al usar este sitio y nuestro contenido (consejos VIP, blogs, estadísticas y gráficos), aceptas lo siguiente:",
+    termsOfUse1Title: "1. Solo Opiniones Inteligentes",
+    termsOfUse1Content: "Todo lo que ves aquí se basa en análisis, pensamiento experto y nuestro motor de IA. Estas son ideas, no garantías, no asesoramiento financiero. Úsalas sabiamente, pero recuerda: la decisión final siempre es tuya.",
+    termsOfUse2Title: "2. Sin Garantías, Sin Culpa",
+    termsOfUse2Content: "Nuestro objetivo es ser precisos, perspicaces y estar a la vanguardia. Pero los resultados en los deportes son impredecibles — TipsDaniel no es responsable de ninguna pérdida financiera resultante del uso de nuestro contenido.",
+    termsOfUse3Title: "3. Solo para Adultos",
+    termsOfUse3Content: "Nuestro contenido está destinado a usuarios mayores de 18 años.",
+    termsOfUse4Title: "4. Respetando Tu Privacidad",
+    termsOfUse4Content: "No recopilamos ni vendemos tus datos personales. Los datos anónimos podrían usarse para mejorar el rendimiento del sitio y la experiencia del usuario.",
+    termsOfUse5Title: "5. Podemos Actualizar Cosas",
+    termsOfUse5Content: "Nos reservamos el derecho de actualizar estos términos en cualquier momento. Mantente inteligente y mantente informado.",
+    termsOfUseFooter: "Si no estás de acuerdo con nuestros términos — por favor no uses este sitio.\nDe lo contrario, bienvenido al equipo.",
+    termsOfUseJoinNote: "Antes de comprar, por favor revisa nuestros Términos de Uso!"
   },
   pt: {
     // Navigation
@@ -345,7 +377,23 @@ export const translations = {
       },
       recommended: 'Recomendado',
       getStarted: 'Começar'
-    }
+    },
+    postsYouMightLike: "Posts que você pode gostar",
+    termsOfUse: "Términos de Uso",
+    termsOfUseTitle: "Términos de Uso – TipsDaniel",
+    termsOfUseWelcome: "Bienvenido a TipsDaniel. Al usar este sitio y nuestro contenido (consejos VIP, blogs, estadísticas y gráficos), aceptas lo siguiente:",
+    termsOfUse1Title: "1. Solo Opiniones Inteligentes",
+    termsOfUse1Content: "Todo lo que ves aquí se basa en análisis, pensamiento experto y nuestro motor de IA. Estas son ideas, no garantías, no asesoramiento financiero. Úsalas sabiamente, pero recuerda: la decisión final siempre es tuya.",
+    termsOfUse2Title: "2. Sin Garantías, Sin Culpa",
+    termsOfUse2Content: "Nuestro objetivo es ser precisos, perspicaces y estar a la vanguardia. Pero los resultados en los deportes son impredecibles — TipsDaniel no es responsable de ninguna pérdida financiera resultante del uso de nuestro contenido.",
+    termsOfUse3Title: "3. Solo para Adultos",
+    termsOfUse3Content: "Nuestro contenido está destinado a usuarios mayores de 18 años.",
+    termsOfUse4Title: "4. Respetando Tu Privacidad",
+    termsOfUse4Content: "No recopilamos ni vendemos tus datos personales. Los datos anónimos podrían usarse para mejorar el rendimiento del sitio y la experiencia del usuario.",
+    termsOfUse5Title: "5. Podemos Actualizar Cosas",
+    termsOfUse5Content: "Nos reservamos el derecho de actualizar estos términos en cualquier momento. Mantente inteligente y mantente informado.",
+    termsOfUseFooter: "Si no estás de acuerdo con nuestros términos — por favor no uses este sitio.\nDe lo contrario, bienvenido al equipo.",
+    termsOfUseJoinNote: "Antes de comprar, por favor revise nossos Termos de Uso!"
   },
   ru: {
     // Navigation
@@ -461,7 +509,23 @@ export const translations = {
       },
       recommended: 'Рекомендуется',
       getStarted: 'Начать'
-    }
+    },
+    postsYouMightLike: "Посты, которые могут вам понравиться",
+    termsOfUse: "Términos de Uso",
+    termsOfUseTitle: "Términos de Uso – TipsDaniel",
+    termsOfUseWelcome: "Bienvenido a TipsDaniel. Al usar este sitio y nuestro contenido (consejos VIP, blogs, estadísticas y gráficos), aceptas lo siguiente:",
+    termsOfUse1Title: "1. Solo Opiniones Inteligentes",
+    termsOfUse1Content: "Todo lo que ves aquí se basa en análisis, pensamiento experto y nuestro motor de IA. Estas son ideas, no garantías, no asesoramiento financiero. Úsalas sabiamente, pero recuerda: la decisión final siempre es tuya.",
+    termsOfUse2Title: "2. Sin Garantías, Sin Culpa",
+    termsOfUse2Content: "Nuestro objetivo es ser precisos, perspicaces y estar a la vanguardia. Pero los resultados en los deportes son impredecibles — TipsDaniel no es responsable de ninguna pérdida financiera resultante del uso de nuestro contenido.",
+    termsOfUse3Title: "3. Solo para Adultos",
+    termsOfUse3Content: "Nuestro contenido está destinado a usuarios mayores de 18 años.",
+    termsOfUse4Title: "4. Respetando Tu Privacidad",
+    termsOfUse4Content: "No recopilamos ni vendemos tus datos personales. Los datos anónimos podrían usarse para mejorar el rendimiento del sitio y la experiencia del usuario.",
+    termsOfUse5Title: "5. Podemos Actualizar Cosas",
+    termsOfUse5Content: "Nos reservamos el derecho de actualizar estos términos en cualquier momento. Mantente inteligente y mantente informado.",
+    termsOfUseFooter: "Si no estás de acuerdo con nuestros términos — por favor no uses este sitio.\nDe lo contrario, bienvenido al equipo.",
+    termsOfUseJoinNote: "Перед покупкой, пожалуйста, ознакомьтесь с нашими Условиями использования!"
   },
   ar: {
     // Navigation
@@ -574,7 +638,23 @@ export const translations = {
       },
       recommended: 'موصى به',
       getStarted: 'ابدأ'
-    }
+    },
+    postsYouMightLike: "منشورات قد تعجبك",
+    termsOfUse: "Términos de Uso",
+    termsOfUseTitle: "Términos de Uso – TipsDaniel",
+    termsOfUseWelcome: "Bienvenido a TipsDaniel. Al usar este sitio y nuestro contenido (consejos VIP, blogs, estadísticas y gráficos), aceptas lo siguiente:",
+    termsOfUse1Title: "1. Solo Opiniones Inteligentes",
+    termsOfUse1Content: "Todo lo que ves aquí se basa en análisis, pensamiento experto y nuestro motor de IA. Estas son ideas, no garantías, no asesoramiento financiero. Úsalas sabiamente, pero recuerda: la decisión final siempre es tuya.",
+    termsOfUse2Title: "2. Sin Garantías, Sin Culpa",
+    termsOfUse2Content: "Nuestro objetivo es ser precisos, perspicaces y estar a la vanguardia. Pero los resultados en los deportes son impredecibles — TipsDaniel no es responsable de ninguna pérdida financiera resultante del uso de nuestro contenido.",
+    termsOfUse3Title: "3. Solo para Adultos",
+    termsOfUse3Content: "Nuestro contenido está destinado a usuarios mayores de 18 años.",
+    termsOfUse4Title: "4. Respetando Tu Privacidad",
+    termsOfUse4Content: "No recopilamos ni vendemos tus datos personales. Los datos anónimos podrían usarse para mejorar el rendimiento del sitio y la experiencia del usuario.",
+    termsOfUse5Title: "5. Podemos Actualizar Cosas",
+    termsOfUse5Content: "Nos reservamos el derecho de actualizar estos términos en cualquier momento. Mantente inteligente y mantente informado.",
+    termsOfUseFooter: "Si no estás de acuerdo con nuestros términos — por favor no uses este sitio.\nDe lo contrario, bienvenido al equipo.",
+    termsOfUseJoinNote: "قبل الشراء، يرجى مراجعة شروط الاستخدام الخاصة بنا!"
   },
   hi: {
     // Navigation
@@ -671,23 +751,39 @@ export const translations = {
           recommended: false
         },
         fourMonth: {
-          title: '4 महीने की योजना',
+          title: 'प्रति 4 महीने की योजना',
           price: '$32',
-          period: '/माह',
+          period: '/महीने',
           description: 'स्मार्ट बेटर्स आगे सोचते हैं।\nयह योजना आपको बांधती है और पैसे बचाती है — एक स्पष्ट विकल्प अगर आप जीतने के लिए यहां हैं।',
           recommended: true
         },
         annual: {
           title: 'वार्षिक योजना',
           price: '$25',
-          period: '/माह',
+          period: '/महीने',
           description: 'आप यहां खेलने के लिए नहीं हैं। आप यहां बनाने के लिए हैं।\nयह हमारी पूर्ण योजना है उन लोगों के लिए जो पूर्ण पहुंच, पूर्ण स्थिरता और पूर्ण विश्वास चाहते हैं।',
           recommended: false
         }
       },
       recommended: 'अनुशंसित',
       getStarted: 'शुरू करें'
-    }
+    },
+    postsYouMightLike: "आपको पसंद आ सकने वाले पोस्ट",
+    termsOfUse: "Términos de Uso",
+    termsOfUseTitle: "Términos de Uso – TipsDaniel",
+    termsOfUseWelcome: "Bienvenido a TipsDaniel. Al usar este sitio y nuestro contenido (consejos VIP, blogs, estadísticas y gráficos), aceptas lo siguiente:",
+    termsOfUse1Title: "1. Solo Opiniones Inteligentes",
+    termsOfUse1Content: "Todo lo que ves aquí se basa en análisis, pensamiento experto y nuestro motor de IA. Estas son ideas, no garantías, no asesoramiento financiero. Úsalas sabiamente, pero recuerda: la decisión final siempre es tuya.",
+    termsOfUse2Title: "2. Sin Garantías, Sin Culpa",
+    termsOfUse2Content: "Nuestro objetivo es ser precisos, perspicaces y estar a la vanguardia. Pero los resultados en los deportes son impredecibles — TipsDaniel no es responsable de ninguna pérdida financiera resultante del uso de nuestro contenido.",
+    termsOfUse3Title: "3. Solo para Adultos",
+    termsOfUse3Content: "Nuestro contenido está destinado a usuarios mayores de 18 años.",
+    termsOfUse4Title: "4. Respetando Tu Privacidad",
+    termsOfUse4Content: "No recopilamos ni vendemos tus datos personales. Los datos anónimos podrían usarse para mejorar el rendimiento del sitio y la experiencia del usuario.",
+    termsOfUse5Title: "5. Podemos Actualizar Cosas",
+    termsOfUse5Content: "Nos reservamos el derecho de actualizar estos términos en cualquier momento. Mantente inteligente y mantente informado.",
+    termsOfUseFooter: "Si no estás de acuerdo con nuestros términos — por favor no uses este sitio.\nDe lo contrario, bienvenido al equipo.",
+    termsOfUseJoinNote: "खरीदने से पहले, कृपया हमारे उपयोग की शर्तें पढ़ें!"
   },
   fr: {
     // Navigation
@@ -800,7 +896,23 @@ export const translations = {
       },
       recommended: 'Recommandé',
       getStarted: 'Commencer'
-    }
+    },
+    postsYouMightLike: "Articles qui pourraient vous plaire",
+    termsOfUse: "Términos de Uso",
+    termsOfUseTitle: "Términos de Uso – TipsDaniel",
+    termsOfUseWelcome: "Bienvenido a TipsDaniel. Al usar este sitio y nuestro contenido (consejos VIP, blogs, estadísticas y gráficos), aceptas lo siguiente:",
+    termsOfUse1Title: "1. Solo Opiniones Inteligentes",
+    termsOfUse1Content: "Todo lo que ves aquí se basa en análisis, pensamiento experto y nuestro motor de IA. Estas son ideas, no garantías, no asesoramiento financiero. Úsalas sabiamente, pero recuerda: la decisión final siempre es tuya.",
+    termsOfUse2Title: "2. Sin Garantías, Sin Culpa",
+    termsOfUse2Content: "Nuestro objetivo es ser precisos, perspicaces y estar a la vanguardia. Pero los resultados en los deportes son impredecibles — TipsDaniel no es responsable de ninguna pérdida financiera resultante del uso de nuestro contenido.",
+    termsOfUse3Title: "3. Solo para Adultos",
+    termsOfUse3Content: "Nuestro contenido está destinado a usuarios mayores de 18 años.",
+    termsOfUse4Title: "4. Respetando Tu Privacidad",
+    termsOfUse4Content: "No recopilamos ni vendemos tus datos personales. Los datos anónimos podrían usarse para mejorar el rendimiento del sitio y la experiencia del usuario.",
+    termsOfUse5Title: "5. Podemos Actualizar Cosas",
+    termsOfUse5Content: "Nos reservamos el derecho de actualizar estos términos en cualquier momento. Mantente inteligente y mantente informado.",
+    termsOfUseFooter: "Si no estás de acuerdo con nuestros términos — por favor no uses este sitio.\nDe lo contrario, bienvenido al equipo.",
+    termsOfUseJoinNote: "Avant d'acheter, veuillez consulter nos Conditions d'utilisation !"
   }
 };
 

@@ -281,23 +281,29 @@ const NavBar = () => {
             ) : (
               <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
                 <NavLinks>
-                  <NavButton 
-                    active={location.pathname === '/' && document.getElementById('features')?.getBoundingClientRect().top < 100}
+                  <NavLink
                     onClick={() => handleSectionClick('features')}
+                    active={location.pathname === '/' && location.hash === '#features'}
                   >
                     {t('whyUs')}
-                  </NavButton>
-                  <NavButton 
-                    active={location.pathname === '/' && document.getElementById('how-it-works')?.getBoundingClientRect().top < 100}
+                  </NavLink>
+                  <NavLink
                     onClick={() => handleSectionClick('how-it-works')}
+                    active={location.pathname === '/' && location.hash === '#how-it-works'}
                   >
                     {t('howItWorks')}
-                  </NavButton>
-                  <NavLink 
-                    to="/blog" 
+                  </NavLink>
+                  <NavLink
+                    to="/blog"
                     active={location.pathname === '/blog'}
                   >
                     {t('blog')}
+                  </NavLink>
+                  <NavLink
+                    to="/terms"
+                    active={location.pathname === '/terms'}
+                  >
+                    {t('termsOfUse')}
                   </NavLink>
                 </NavLinks>
 
@@ -468,7 +474,7 @@ const NavBar = () => {
             </Button>
             <Button
               component={Link}
-              to="/join"
+              to="/terms"
               onClick={handleDrawerToggle}
               sx={{
                 color: 'white',
@@ -480,7 +486,7 @@ const NavBar = () => {
                 },
               }}
             >
-              {t('joinNow')}
+              {t('termsOfUse')}
             </Button>
             <Box sx={{ mt: 2 }}>
               <Button

@@ -175,9 +175,43 @@ const RecommendedBadge = styled(Box)(({ theme }) => ({
   fontWeight: 600
 }));
 
+const LeagueBadge = styled('img')(({ theme }) => ({
+  width: '80px',
+  height: '80px',
+  objectFit: 'contain',
+  filter: 'grayscale(100%) brightness(0.8)',
+  transition: 'all 0.3s ease-in-out',
+  '&:hover': {
+    filter: 'grayscale(0%) brightness(1)',
+    transform: 'scale(1.1)'
+  },
+  [theme.breakpoints.down('sm')]: {
+    width: '60px',
+    height: '60px'
+  }
+}));
+
+const LeagueSection = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(6, 0),
+  background: 'rgba(19, 47, 76, 0.3)',
+  backdropFilter: 'blur(10px)',
+  borderTop: '1px solid rgba(0, 180, 216, 0.2)',
+  borderBottom: '1px solid rgba(0, 180, 216, 0.2)',
+  margin: theme.spacing(6, 0)
+}));
+
 function JoinPage() {
   const theme = useTheme();
   const { t } = useLanguage();
+
+  const leagues = [
+    { name: 'Premier League', logo: '/assets/leagues/premier-league.png' },
+    { name: 'La Liga', logo: '/assets/leagues/la-liga.png' },
+    { name: 'Serie A', logo: '/assets/leagues/serie-a.png' },
+    { name: 'Bundesliga', logo: '/assets/leagues/bundesliga.png' },
+    { name: 'Ligue 1', logo: '/assets/leagues/ligue-1.png' },
+    { name: 'Champions League', logo: '/assets/leagues/champions-league.png' }
+  ];
 
   const plans = [
     {
@@ -308,6 +342,30 @@ function JoinPage() {
               </ListItem>
             ))}
           </List>
+        </Box>
+
+        <Box sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          mb: 4,
+        }}>
+          <Box sx={{
+            background: 'rgba(200, 200, 200, 0.10)',
+            color: '#b0b0b0',
+            borderLeft: '4px solid #b0b0b0',
+            borderRadius: '8px',
+            px: 3,
+            py: 1.2,
+            fontSize: '1rem',
+            fontWeight: 500,
+            maxWidth: 700,
+            minWidth: 320,
+            width: '100%',
+            boxShadow: 'none',
+            textAlign: 'left',
+          }}>
+            {t('termsOfUseJoinNote')}
+          </Box>
         </Box>
 
         <Grid container spacing={4}>

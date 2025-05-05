@@ -3,8 +3,22 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useTheme, useMediaQuery } from '@mui/material';
 import { Card, CardMedia, CardContent, Typography, Chip, Box, Button } from '@mui/material';
-import { ArrowForwardIcon } from '@mui/icons-material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { styled } from '@mui/material/styles';
+
+export const BlogImage = styled(CardMedia)(({ theme }) => ({
+  height: 200,
+  width: '100%',
+  objectFit: 'cover',
+  borderRadius: '8px',
+  transition: 'transform 0.3s ease',
+  [theme.breakpoints.down('sm')]: {
+    height: 150,
+  },
+  '&:hover': {
+    transform: 'scale(1.05)',
+  },
+}));
 
 const StyledCard = styled(Card)(({ theme }) => ({
   height: '100%',
@@ -24,13 +38,6 @@ const StyledCard = styled(Card)(({ theme }) => ({
     '& .MuiCardMedia-root': {
       transform: 'scale(1.05)',
     }
-  },
-}));
-
-const StyledCardMedia = styled(CardMedia)(({ theme }) => ({
-  height: 200,
-  [theme.breakpoints.down('sm')]: {
-    height: 150,
   },
 }));
 
