@@ -175,54 +175,61 @@ const RecommendedBadge = styled(Box)(({ theme }) => ({
   fontWeight: 600
 }));
 
-const plans = [
-  {
-    title: 'Monthly Plan',
-    price: '$39',
-    period: '/month',
-    description: 'Just checking us out? Cool.\nThis plan gets you in the game with full access — no strings attached.',
-    recommended: false
-  },
-  {
-    title: '4-Month Plan',
-    price: '$32',
-    period: '/month',
-    description: 'Smart bettors think ahead.\nThis plan locks you in and saves you cash — a no-brainer if you\'re in it to win it.',
-    recommended: true
-  },
-  {
-    title: '12-Month Plan',
-    price: '$25',
-    period: '/month',
-    description: 'You\'re not here to play around. You\'re here to build.\nThis is our all-in plan for people who want full access, full consistency, and full confidence.',
-    recommended: false
-  }
-];
-
-const features = [
-  {
-    icon: <TrendingUpIcon />,
-    title: 'Success Rate',
-    value: '78%',
-    description: 'Consistent winning predictions across all sports'
-  },
-  {
-    icon: <PeopleIcon />,
-    title: 'Community',
-    value: '15+',
-    description: 'Weekly expert recommendations from our team'
-  },
-  {
-    icon: <SecurityIcon />,
-    title: 'Reliability',
-    value: '24/7',
-    description: 'Round-the-clock support and updates'
-  }
-];
-
 function JoinPage() {
   const theme = useTheme();
   const { t } = useLanguage();
+
+  const plans = [
+    {
+      title: t('join.plans.monthly.title'),
+      price: t('join.plans.monthly.price'),
+      period: t('join.plans.monthly.period'),
+      description: t('join.plans.monthly.description'),
+      recommended: false,
+      paypalLink: 'https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-71T45749CG856552HNAMG2BA'
+    },
+    {
+      title: t('join.plans.fourMonth.title'),
+      price: t('join.plans.fourMonth.price'),
+      period: t('join.plans.fourMonth.period'),
+      description: t('join.plans.fourMonth.description'),
+      recommended: true,
+      paypalLink: 'https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-76J25657SW802130DNAMG24Y'
+    },
+    {
+      title: t('join.plans.annual.title'),
+      price: t('join.plans.annual.price'),
+      period: t('join.plans.annual.period'),
+      description: t('join.plans.annual.description'),
+      recommended: false,
+      paypalLink: 'https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-7AD86389KF802552ENAMG3OY'
+    }
+  ];
+
+  const features = [
+    {
+      icon: <TrendingUpIcon />,
+      title: 'Success Rate',
+      value: '78%',
+      description: 'Consistent winning predictions across all sports'
+    },
+    {
+      icon: <PeopleIcon />,
+      title: 'Community',
+      value: '15+',
+      description: 'Weekly expert recommendations from our team'
+    },
+    {
+      icon: <SecurityIcon />,
+      title: 'Reliability',
+      value: '24/7',
+      description: 'Round-the-clock support and updates'
+    }
+  ];
+
+  const handlePayment = (paypalLink) => {
+    window.open(paypalLink, '_blank');
+  };
 
   return (
     <Box sx={{ 
@@ -304,8 +311,8 @@ function JoinPage() {
         </Box>
 
         <Grid container spacing={4}>
-          {Object.entries(t('join.plans')).map(([key, plan]) => (
-            <Grid item xs={12} md={4} key={key}>
+          {plans.map((plan, idx) => (
+            <Grid item xs={12} md={4} key={idx}>
               <StyledCard>
                 <CardContent sx={{ p: 4, height: '100%', display: 'flex', flexDirection: 'column' }}>
                   {plan.recommended && (
@@ -369,14 +376,16 @@ function JoinPage() {
                     {plan.description}
                   </Typography>
 
-                  <CustomButton 
-                    fullWidth 
-                    showArrow={true}
+                  <CustomButton
+                    variant="contained"
+                    onClick={() => handlePayment(plan.paypalLink)}
                     sx={{
+                      background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+                      color: 'white',
                       mt: 'auto',
-                      background: plan.recommended 
-                        ? 'linear-gradient(45deg, #00B4D8, #48CAE4)'
-                        : 'linear-gradient(45deg, rgba(0, 180, 216, 0.8), rgba(72, 202, 228, 0.8))'
+                      '&:hover': {
+                        background: 'linear-gradient(45deg, #1976D2 30%, #1E88E5 90%)',
+                      }
                     }}
                   >
                     {t('join.getStarted')}

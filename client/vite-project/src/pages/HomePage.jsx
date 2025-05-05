@@ -838,7 +838,7 @@ function HomePage() {
                       mb: 1,
                       textShadow: '0 2px 4px rgba(0, 180, 216, 0.3)'
                     }}>
-                      78%
+                      76%
                     </Typography>
                     <Typography variant="h6" sx={{ 
                       color: 'white',
