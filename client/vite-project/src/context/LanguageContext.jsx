@@ -24,17 +24,25 @@ export const LanguageProvider = ({ children }) => {
     return value ?? key;
   };
 
+  const value = {
+    language,
+    setLanguage,
+    t
+  };
+
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={value}>
       {children}
     </LanguageContext.Provider>
   );
 };
 
-export const useLanguage = () => {
+const useLanguage = () => {
   const context = useContext(LanguageContext);
   if (!context) {
     throw new Error('useLanguage must be used within a LanguageProvider');
   }
   return context;
-}; 
+};
+
+export { useLanguage }; 

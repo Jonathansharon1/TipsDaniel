@@ -4,6 +4,7 @@ import { Container, Typography, Box, CircularProgress, Grid } from '@mui/materia
 import { styled } from '@mui/material/styles';
 import { useLanguage } from '../context/LanguageContext';
 import { GlassCard, GlassButton } from '../components/GlassComponents';
+import ShareButton from '../components/ShareButton';
 
 const StyledImage = styled('img')(({ theme }) => ({
   width: '90%',
@@ -175,14 +176,21 @@ const PostDetailPage = () => {
             <>
               <GlassCard sx={{ p: { xs: 2, md: 4 }, mb: 4 }}>
                 {/* Title */}
-                <Typography variant="h3" component="h1" gutterBottom sx={{ 
+                <Typography variant="h3" component="h1" sx={{ 
                   fontSize: { xs: '2rem', md: '3rem' },
                   color: 'white',
                   textAlign: 'center',
-                  mb: 4
+                  mb: 2
                 }}>
                   {post.title}
                 </Typography>
+                {/* Share Button Row */}
+                <Box sx={{ display: 'flex', justifyContent: (language === 'ar' || language === 'he') ? 'flex-start' : 'flex-end', mb: 2 }}>
+                  <ShareButton 
+                    url={window.location.href} 
+                    title={post.title}
+                  />
+                </Box>
                 
                 {/* Main Image */}
                 {post.main_image && (
