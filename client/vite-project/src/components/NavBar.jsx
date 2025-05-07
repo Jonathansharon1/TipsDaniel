@@ -281,18 +281,18 @@ const NavBar = () => {
             ) : (
               <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', justifyContent: 'space-between' }}>
                 <NavLinks>
-                  <NavLink
+                  <NavButton
                     onClick={() => handleSectionClick('features')}
                     active={location.pathname === '/' && location.hash === '#features'}
                   >
                     {t('whyUs')}
-                  </NavLink>
-                  <NavLink
+                  </NavButton>
+                  <NavButton
                     onClick={() => handleSectionClick('how-it-works')}
                     active={location.pathname === '/' && location.hash === '#how-it-works'}
                   >
                     {t('howItWorks')}
-                  </NavLink>
+                  </NavButton>
                   <NavLink
                     to="/blog"
                     active={location.pathname === '/blog'}

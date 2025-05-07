@@ -41,6 +41,7 @@ import axios from 'axios';
 import NavBar from '../components/NavBar';
 import CustomButton from '../components/Button';
 import { useLanguage } from '../context/LanguageContext';
+// import Footer from '../components/Footer'; // This line might also be removed if Footer is globally managed
 
 // Styled components
 const HeroSection = styled(Box)(({ theme }) => ({
@@ -1490,15 +1491,6 @@ function HomePage() {
               </CustomButton>
             </GlowingButtonWrapper>
           </Box>
-        </Container>
-      </Box>
-
-      {/* Footer */}
-      <Box sx={{ py: 4, borderTop: 1, borderColor: 'divider' }}>
-        <Container maxWidth="lg">
-          <Typography align="center" color="text.secondary">
-            © 2025 TipsDaniel. All rights reserved.
-          </Typography>
         </Container>
       </Box>
     </Box>
