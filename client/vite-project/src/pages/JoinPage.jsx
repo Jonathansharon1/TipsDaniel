@@ -14,7 +14,7 @@ import {
   Paper
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Check as CheckIcon, TrendingUp as TrendingUpIcon, People as PeopleIcon, Security as SecurityIcon } from '@mui/icons-material';
+import { Check as CheckIcon, TrendingUp as TrendingUpIcon, People as PeopleIcon, Security as SecurityIcon, CreditCard as CreditCardIcon, Payment as PaymentIcon, Flag as FlagIcon } from '@mui/icons-material';
 import CustomButton from '../components/Button';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -213,30 +213,40 @@ function JoinPage() {
     { name: 'Champions League', logo: '/assets/leagues/champions-league.png' }
   ];
 
-  const plans = [
+  const paymentMethods = [
     {
-      title: t('join.plans.monthly.title'),
-      price: t('join.plans.monthly.price'),
-      period: t('join.plans.monthly.period'),
-      description: t('join.plans.monthly.description'),
-      recommended: false,
-      paypalLink: 'https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-71T45749CG856552HNAMG2BA'
+      id: 1,
+      title: t('join.paymentSection.option1.title'),
+      description: t('join.paymentSection.option1.description'),
+      button: t('join.paymentSection.option1.button'),
+      link: 'https://app.paymentbeast.com/mc/payment?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ODA5IiwicmVxdWVzdCI6eyJyZWZlcmVuY2VJZCI6IkJyaWFuIENhcyIsImFtb3VudCI6MzkuOSwiY3VycmVuY3kiOiJVU0QifX0.AoVHX6EoGRMQhsE00Fm8NUZT4AfxwaNmBmVPscHshYw',
+      icon: <CreditCardIcon />,
+      badge: t('join.paymentSection.mostPopular'),
+      background: 'linear-gradient(135deg, rgba(0, 180, 216, 0.1), rgba(72, 202, 228, 0.1))',
+      borderColor: 'rgba(0, 180, 216, 0.3)',
+      buttonStyle: 'linear-gradient(45deg, #00B4D8, #0096C7)'
     },
     {
-      title: t('join.plans.fourMonth.title'),
-      price: t('join.plans.fourMonth.price'),
-      period: t('join.plans.fourMonth.period'),
-      description: t('join.plans.fourMonth.description'),
-      recommended: true,
-      paypalLink: 'https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-76J25657SW802130DNAMG24Y'
+      id: 2,
+      title: t('join.paymentSection.option2.title'),
+      description: t('join.paymentSection.option2.description'),
+      button: t('join.paymentSection.option2.button'),
+      link: 'https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-71T45749CG856552HNAMG2BA',
+      icon: <PaymentIcon />,
+      background: 'linear-gradient(135deg, rgba(0, 123, 255, 0.1), rgba(0, 86, 179, 0.1))',
+      borderColor: 'rgba(0, 123, 255, 0.3)',
+      buttonStyle: 'linear-gradient(45deg, #007BFF, #0056B3)'
     },
     {
-      title: t('join.plans.annual.title'),
-      price: t('join.plans.annual.price'),
-      period: t('join.plans.annual.period'),
-      description: t('join.plans.annual.description'),
-      recommended: false,
-      paypalLink: 'https://www.paypal.com/webapps/billing/plans/subscribe?plan_id=P-7AD86389KF802552ENAMG3OY'
+      id: 3,
+      title: t('join.paymentSection.option3.title'),
+      description: t('join.paymentSection.option3.description'),
+      button: t('join.paymentSection.option3.button'),
+      link: 'https://app.paymentbeast.com/mc/payment?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ODA5IiwicmVxdWVzdCI6eyJiaWxsaW5nQWRkcmVzcyI6eyJjb3VudHJ5Q29kZSI6IkJSIn0sInJlZmVyZW5jZUlkIjoiYnJhemlsIGJyaWFuIiwicGF5bWVudE1ldGhvZCI6IkVYVEVSTkFMX0hQUCIsImFtb3VudCI6MjIwLCJjdXJyZW5jeSI6IkJSTCJ9fQ.zCRZSh-xx1hKtokci5gqYp9cDG46p6GGHtWGtuQzCUA',
+      icon: <FlagIcon />,
+      background: 'linear-gradient(135deg, rgba(34, 139, 34, 0.1), rgba(0, 100, 0, 0.1))',
+      borderColor: 'rgba(34, 139, 34, 0.3)',
+      buttonStyle: 'linear-gradient(45deg, #228B22, #006400)'
     }
   ];
 
@@ -368,91 +378,162 @@ function JoinPage() {
           </Box>
         </Box>
 
-        <Grid container spacing={4}>
-          {plans.map((plan, idx) => (
-            <Grid item xs={12} md={4} key={idx}>
-              <StyledCard>
-                <CardContent sx={{ p: 4, height: '100%', display: 'flex', flexDirection: 'column' }}>
-                  {plan.recommended && (
-                    <Box
-                      sx={{
-                        position: 'absolute',
-                        top: 16,
-                        right: 16,
-                        background: 'linear-gradient(45deg, #00B4D8, #48CAE4)',
-                        color: 'white',
-                        px: 2,
-                        py: 0.5,
-                        borderRadius: '12px',
-                        fontSize: '0.875rem',
-                        fontWeight: 600
-                      }}
-                    >
-                      {t('join.recommended')}
+        {/* Payment Methods Section */}
+        <Box sx={{ mt: 8, mb: 6 }}>
+          <Typography
+            variant="h4"
+            component="h2"
+            sx={{
+              fontSize: { xs: '1.75rem', sm: '2rem', md: '2.25rem' },
+              fontWeight: 700,
+              mb: 6,
+              textAlign: 'center',
+              color: 'white',
+              background: 'linear-gradient(45deg, #ffffff, #48CAE4)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}
+          >
+            {t('join.paymentSection.title')}
+          </Typography>
+
+          <Grid container spacing={4} sx={{ maxWidth: 1200, mx: 'auto' }}>
+            {paymentMethods.map((method) => (
+              <Grid item xs={12} md={4} key={method.id}>
+                <Box sx={{
+                  position: 'relative',
+                  height: '100%',
+                  background: 'rgba(19, 47, 76, 0.8)',
+                  borderRadius: '20px',
+                  border: `2px solid ${method.borderColor}`,
+                  p: 4,
+                  transition: 'all 0.3s ease-in-out',
+                  overflow: 'hidden',
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: method.background,
+                    zIndex: -1
+                  },
+                  '&:hover': {
+                    transform: 'translateY(-8px)',
+                    boxShadow: `0 12px 40px ${method.borderColor}`,
+                    border: `2px solid ${method.borderColor.replace('0.3', '0.6')}`,
+                  }
+                }}>
+                  {/* Badge for most popular */}
+                  {method.badge && (
+                    <Box sx={{
+                      position: 'absolute',
+                      top: 16,
+                      right: 16,
+                      background: 'linear-gradient(45deg, #FFD700, #FFA500)',
+                      color: 'white',
+                      px: 2,
+                      py: 0.5,
+                      borderRadius: '12px',
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      zIndex: 1
+                    }}>
+                      {method.badge}
                     </Box>
                   )}
-                  <Typography 
-                    variant="h5" 
-                    component="h3" 
-                    sx={{ 
-                      color: 'white', 
-                      mb: 2,
-                      fontWeight: 'bold'
-                    }}
-                  >
-                    {plan.title}
-                  </Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'baseline', mb: 2 }}>
-                    <PriceTypography 
-                      variant="h4" 
-                      component="span" 
-                      className="price"
-                      sx={{ 
-                        fontWeight: 'bold',
-                        mr: 1
-                      }}
-                    >
-                      {plan.price}
-                    </PriceTypography>
-                    <Typography 
-                      variant="body1" 
-                      sx={{ 
-                        color: 'rgba(255, 255, 255, 0.7)'
-                      }}
-                    >
-                      {plan.period}
-                    </Typography>
+
+                  {/* Icon */}
+                  <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    mb: 3
+                  }}>
+                    <Box sx={{
+                      width: 64,
+                      height: 64,
+                      borderRadius: '16px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      backdropFilter: 'blur(10px)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      '& svg': {
+                        fontSize: '32px',
+                        color: '#00B4D8'
+                      }
+                    }}>
+                      {method.icon}
+                    </Box>
                   </Box>
-                  <Typography 
-                    variant="body1" 
-                    sx={{ 
-                      color: 'rgba(255, 255, 255, 0.7)',
-                      mb: 3,
-                      whiteSpace: 'pre-line'
+
+                  {/* Title */}
+                  <Typography
+                    variant="h6"
+                    component="h3"
+                    sx={{
+                      color: 'white',
+                      fontWeight: 700,
+                      mb: 2,
+                      textAlign: 'center',
+                      fontSize: { xs: '1.1rem', sm: '1.25rem' }
                     }}
                   >
-                    {plan.description}
+                    {method.title}
                   </Typography>
 
-                  <CustomButton
-                    variant="contained"
-                    onClick={() => handlePayment(plan.paypalLink)}
+                  {/* Description */}
+                  <Typography
+                    variant="body1"
                     sx={{
-                      background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
-                      color: 'white',
-                      mt: 'auto',
-                      '&:hover': {
-                        background: 'linear-gradient(45deg, #1976D2 30%, #1E88E5 90%)',
-                      }
+                      color: 'rgba(255, 255, 255, 0.8)',
+                      mb: 4,
+                      textAlign: 'center',
+                      lineHeight: 1.6,
+                      whiteSpace: 'pre-line',
+                      fontSize: { xs: '0.9rem', sm: '1rem' }
                     }}
                   >
-                    {t('join.getStarted')}
-                  </CustomButton>
-                </CardContent>
-              </StyledCard>
-            </Grid>
-          ))}
-        </Grid>
+                    {method.description}
+                  </Typography>
+
+                  {/* CTA Button */}
+                  <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'center'
+                  }}>
+                    <CustomButton
+                      variant="contained"
+                      onClick={() => handlePayment(method.link)}
+                      sx={{
+                        background: method.buttonStyle,
+                        color: 'white',
+                        px: 3,
+                        py: 1.5,
+                        borderRadius: '12px',
+                        fontWeight: 600,
+                        fontSize: { xs: '0.9rem', sm: '1rem' },
+                        boxShadow: `0 4px 15px ${method.borderColor}`,
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        transition: 'all 0.3s ease',
+                        width: '100%',
+                        '&:hover': {
+                          background: method.buttonStyle.replace('45deg', '225deg'),
+                          boxShadow: `0 6px 20px ${method.borderColor}`,
+                          transform: 'translateY(-2px)',
+                        }
+                      }}
+                    >
+                      {method.button}
+                    </CustomButton>
+                  </Box>
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
       </Container>
     </Box>
   );

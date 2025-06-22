@@ -86,7 +86,27 @@ export const translations = {
         weeklyRecommendations: 'Average of 15 recommendations per week',
         successRate: '78% success rate',
         expertAnalysts: 'Expert analysts using advanced AI technology',
-        learning: 'Learning and guidance for smart betting'
+        learning: 'Learning and guidance for smart betting',
+        paymentMethods: 'We accept Credit Card, Google Pay, PayPal, Brazil PIX, Onramp (Nigeria, Ghana, Kenya), Optimoney (Nigeria, Kenya, India, Bangladesh)'
+      },
+      paymentSection: {
+        title: 'Only $39/month – Choose Your Payment Method',
+        option1: {
+          title: 'Pay with Card or Local Methods',
+          description: 'Worldwide Credit Card and Google Pay, or local payment methods for specific countries:\n• Onramp – Nigeria, Ghana, Kenya\n• Optimoney – Nigeria, Kenya, India, Bangladesh',
+          button: 'Continue to Payment Portal'
+        },
+        option2: {
+          title: 'Subscribe with PayPal',
+          description: 'Use PayPal\'s secure subscription system. You\'ll be redirected to confirm your $39/month subscription.',
+          button: 'Pay with PayPal'
+        },
+        option3: {
+          title: 'PIX Payment (Brazil Only)',
+          description: 'Pay via PIX using Card Onramp. This method is only available to users in Brazil.',
+          button: 'Pay with PIX (Brazil)'
+        },
+        mostPopular: 'Most Popular'
       },
       plans: {
         monthly: {
@@ -221,30 +241,27 @@ export const translations = {
         weeklyRecommendations: 'Promedio de 15 recomendaciones por semana',
         successRate: '78% de tasa de éxito',
         expertAnalysts: 'Analistas expertos utilizando tecnología avanzada de IA',
-        learning: 'Aprendizaje y orientación para apuestas inteligentes'
+        learning: 'Aprendizaje y orientación para apuestas inteligentes',
+        paymentMethods: 'Aceptamos Tarjeta de Crédito, Google Pay, PayPal, PIX Brasil, Onramp (Nigeria, Ghana, Kenya), Optimoney (Nigeria, Kenya, India, Bangladesh)'
       },
-      plans: {
-        monthly: {
-          title: 'Plan Mensual',
-          price: '$39',
-          period: '/mes',
-          description: '¿Solo nos estás conociendo? Genial.\nEste plano te da acceso completo — sin compromisos.',
-          recommended: false
+      paymentSection: {
+        title: 'Solo $39/mes – Elige Tu Método de Pago',
+        option1: {
+          title: 'Paga con Tarjeta o Métodos Locales',
+          description: 'Tarjeta de Crédito y Google Pay en todo el mundo, o métodos de pago locales para países específicos:\n• Onramp – Nigeria, Ghana, Kenya\n• Optimoney – Nigeria, Kenya, India, Bangladesh',
+          button: 'Continuar al Portal de Pago'
         },
-        fourMonth: {
-          title: 'Plan de 4 Meses',
-          price: '$32',
-          period: '/mes',
-          description: 'Los apostadores inteligentes piensan a futuro.\nEste plano te mantén y ahorras dinero — una decisión obvia si estás aquí para ganar.',
-          recommended: true
+        option2: {
+          title: 'Suscríbete con PayPal',
+          description: 'Usa el sistema seguro de suscripción de PayPal. Serás redirigido para confirmar tu suscripción de $39/mes.',
+          button: 'Pagar con PayPal'
         },
-        annual: {
-          title: 'Plan Anual',
-          price: '$25',
-          period: '/mes',
-          description: 'No estás aquí para jugar. Estás aquí para construir.\nEste es nuestro plan completo para quienes quieren acceso total, consistência total y confiança total.',
-          recommended: false
-        }
+        option3: {
+          title: 'Pago PIX (Solo Brasil)',
+          description: 'Paga vía PIX usando Card Onramp. Este método solo está disponible para usuarios en Brasil.',
+          button: 'Pagar con PIX (Brasil)'
+        },
+        mostPopular: 'Más Popular'
       },
       recommended: 'Recomendado',
       getStarted: 'Comenzar'
@@ -356,30 +373,27 @@ export const translations = {
         weeklyRecommendations: 'Média de 15 recomendações por semana',
         successRate: '78% de taxa de sucesso',
         expertAnalysts: 'Analistas especialistas usando tecnologia avançada de IA',
-        learning: 'Aprendizado e orientação para apostas inteligentes'
+        learning: 'Aprendizado e orientação para apostas inteligentes',
+        paymentMethods: 'Aceitamos Cartão de Crédito, Google Pay, PayPal, PIX Brasil, Onramp (Nigeria, Ghana, Kenya), Optimoney (Nigeria, Kenya, India, Bangladesh)'
       },
-      plans: {
-        monthly: {
-          title: 'Plano Mensal',
-          price: '$39',
-          period: '/mês',
-          description: 'Só nos conhecendo? Legal.\nEste plano te coloca no jogo com acesso total — sem compromissos.',
-          recommended: false
+      paymentSection: {
+        title: 'Apenas $39/mês – Escolha Seu Método de Pagamento',
+        option1: {
+          title: 'Pague com Cartão ou Métodos Locais',
+          description: 'Cartão de Crédito e Google Pay em todo o mundo, ou métodos de pagamento locais para países específicos:\n• Onramp – Nigeria, Ghana, Kenya\n• Optimoney – Nigeria, Kenya, India, Bangladesh',
+          button: 'Continuar para o Portal de Pagamento'
         },
-        fourMonth: {
-          title: 'Plano de 4 Meses',
-          price: '$32',
-          period: '/mês',
-          description: 'Apostadores inteligentes pensam à frente.\nEste plano te mantém e economiza dinheiro — uma decisão óbvia se você está aqui para ganhar.',
-          recommended: true
+        option2: {
+          title: 'Assine com PayPal',
+          description: 'Use o sistema seguro de assinatura do PayPal. Você será redirecionado para confirmar sua assinatura de $39/mês.',
+          button: 'Pagar com PayPal'
         },
-        annual: {
-          title: 'Plano Anual',
-          price: '$25',
-          period: '/mês',
-          description: 'Você não está aqui para brincar. Está aqui para construir.\nEste é nosso plano completo para quem quer acesso total, consistência total e confiança total.',
-          recommended: false
-        }
+        option3: {
+          title: 'Pagamento PIX (Apenas Brasil)',
+          description: 'Pague via PIX usando Card Onramp. Este método está disponível apenas para usuários no Brasil.',
+          button: 'Pagar com PIX (Brasil)'
+        },
+        mostPopular: 'Mais Popular'
       },
       recommended: 'Recomendado',
       getStarted: 'Começar'
@@ -491,30 +505,27 @@ export const translations = {
         weeklyRecommendations: 'В среднем 15 рекомендаций в неделю',
         successRate: '78% успешных ставок',
         expertAnalysts: 'Эксперты-аналитики с использованием передовых технологий ИИ',
-        learning: 'Обучение и руководство для умных ставок'
+        learning: 'Обучение и руководство для умных ставок',
+        paymentMethods: 'Мы принимаем Кредитные карты, Google Pay, PayPal, PIX Бразилия, Onramp (Нигерия, Гана, Кения), Optimoney (Нигерия, Кения, Индия, Бангладеш)'
       },
-      plans: {
-        monthly: {
-          title: 'Месячный План',
-          price: '$39',
-          period: '/месяц',
-          description: 'Просто знакомитесь с нами? Отлично.\nЭтот план дает вам полный доступ — без обязательств.',
-          recommended: false
+      paymentSection: {
+        title: 'Всего $39/месяц – Выберите Способ Оплаты',
+        option1: {
+          title: 'Оплата Картой или Локальными Методами',
+          description: 'Кредитные карты и Google Pay по всему миру, или локальные методы оплаты для определенных стран:\n• Onramp – Нигерия, Гана, Кения\n• Optimoney – Нигерия, Кения, Индия, Бангладеш',
+          button: 'Перейти к Порталу Оплаты'
         },
-        fourMonth: {
-          title: 'План на 4 Месяца',
-          price: '$32',
-          period: '/месяц',
-          description: 'Умные игроки думают наперед.\nЭтот план фиксирует вас и экономит деньги — очевидный выбор, если вы здесь, чтобы выигрывать.',
-          recommended: true
+        option2: {
+          title: 'Подписка через PayPal',
+          description: 'Используйте безопасную систему подписки PayPal. Вы будете перенаправлены для подтверждения подписки $39/месяц.',
+          button: 'Оплатить через PayPal'
         },
-        annual: {
-          title: 'Годовой План',
-          price: '$25',
-          period: '/месяц',
-          description: 'Вы здесь не для игр. Вы здесь, чтобы строить.\nЭто наш полный план для тех, кто хочет полный доступ, полную последовательность и полную уверенность.',
-          recommended: false
-        }
+        option3: {
+          title: 'Оплата PIX (Только Бразилия)',
+          description: 'Оплатите через PIX используя Card Onramp. Этот метод доступен только для пользователей в Бразилии.',
+          button: 'Оплатить через PIX (Бразилия)'
+        },
+        mostPopular: 'Самый Популярный'
       },
       recommended: 'Рекомендуется',
       getStarted: 'Начать'
@@ -623,30 +634,27 @@ export const translations = {
         weeklyRecommendations: 'متوسط 15 توصية في الأسبوع',
         successRate: '78% معدل نجاح',
         expertAnalysts: 'محللون خبراء يستخدمون تقنية الذكاء الاصطناعي المتقدمة',
-        learning: 'التعلم والتوجيه للمراهنات الذكية'
+        learning: 'التعلم والتوجيه للمراهنات الذكية',
+        paymentMethods: 'نحن نقبل بطاقات الائتمان، جوجل باي، باي بال، PIX البرازيل، Onramp (نيجيريا، غانا، كينيا)، Optimoney (نيجيريا، كينيا، الهند، بنغلاديش)'
       },
-      plans: {
-        monthly: {
-          title: 'الخطة الشهرية',
-          price: '$39',
-          period: '/شهر',
-          description: 'هل تتعرف علينا فقط؟ رائع.\nهذه الخطة تمنحك وصولاً كاملاً — بدون التزامات.',
-          recommended: false
+      paymentSection: {
+        title: 'فقط $39/شهر – اختر طريقة الدفع',
+        option1: {
+          title: 'ادفع بالبطاقة أو الطرق المحلية',
+          description: 'بطاقات الائتمان وGoogle Pay في جميع أنحاء العالم، أو طرق الدفع المحلية لبلدان محددة:\n• Onramp – نيجيريا، غانا، كينيا\n• Optimoney – نيجيريا، كينيا، الهند، بنغلاديش',
+          button: 'المتابعة إلى بوابة الدفع'
         },
-        fourMonth: {
-          title: 'خطة 4 أشهر',
-          price: '$32',
-          period: '/شهر',
-          description: 'المراهنون الأذكياء يفكرون في المستقبل.\nهذه الخطة تحميك وتوفر المال — خيار واضح إذا كنت هنا للفوز.',
-          recommended: true
+        option2: {
+          title: 'اشترك مع PayPal',
+          description: 'استخدم نظام الاشتراك الآمن من PayPal. سيتم توجيهك لتأكيد اشتراكك البالغ $39/شهر.',
+          button: 'ادفع مع PayPal'
         },
-        annual: {
-          title: 'الخطة السنوية',
-          price: '$25',
-          period: '/شهر',
-          description: 'أنت لست هنا للعب. أنت هنا للبناء.\nهذه خطتنا الشاملة لمن يريد وصولاً كاملاً، اتساقاً كاملاً وثقة كاملة.',
-          recommended: false
-        }
+        option3: {
+          title: 'دفع PIX (البرازيل فقط)',
+          description: 'ادفع عبر PIX باستخدام Card Onramp. هذه الطريقة متاحة فقط للمستخدمين في البرازيل.',
+          button: 'ادفع مع PIX (البرازيل)'
+        },
+        mostPopular: 'الأكثر شعبية'
       },
       recommended: 'موصى به',
       getStarted: 'ابدأ'
@@ -756,7 +764,42 @@ export const translations = {
     termsOfUseJoinNote: "खरीदने से पहले, कृपया हमारे उपयोग की शर्तें पढ़ें!",
     share: "शेयर करें",
     copyLink: "लिंक कॉपी करें",
-    linkCopied: "लिंक क्लिपबोर्ड पर कॉपी किया गया!"
+    linkCopied: "लिंक क्लिपबोर्ड पर कॉपी किया गया!",
+    join: {
+      title: 'अपनी योजना चुनें',
+      subtitle: 'अपनी सट्टेबाजी यात्रा के लिए सही योजना चुनें। सभी योजनाओं में हमारी मुख्य विशेषताएं शामिल हैं जैसे-जैसे आप आगे बढ़ते हैं।',
+      whatWeOffer: 'हम क्या पेशकश करते हैं?',
+      features: {
+        earlyRecommendations: 'ऑड्स गिरने से पहले जल्दी सिफारिशें',
+        support: 'इंस्टाग्राम चैट के माध्यम से 24/7 सहायता',
+        weeklyRecommendations: 'प्रति सप्ताह औसत 15 सिफारिशें',
+        successRate: '78% सफलता दर',
+        expertAnalysts: 'उन्नत एआई तकनीक का उपयोग करने वाले विशेषज्ञ विश्लेषक',
+        learning: 'स्मार्ट सट्टेबाजी के लिए सीखना और मार्गदर्शन',
+        paymentMethods: 'हम क्रेडिट कार्ड, Google Pay, PayPal, Brazil PIX, Onramp (Nigeria, Ghana, Kenya), Optimoney (Nigeria, Kenya, India, Bangladesh) स्वीकार करते हैं'
+      },
+      paymentSection: {
+        title: 'केवल $39/महीना – अपना भुगतान तरीका चुनें',
+        option1: {
+          title: 'कार्ड या स्थानीय तरीकों से भुगतान करें',
+          description: 'दुनिया भर में क्रेडिट कार्ड और Google Pay, या विशिष्ट देशों के लिए स्थानीय भुगतान तरीके:\n• Onramp – नाइजीरिया, घाना, केन्या\n• Optimoney – नाइजीरिया, केन्या, भारत, बांग्लादेश',
+          button: 'भुगतान पोर्टल पर जारी रखें'
+        },
+        option2: {
+          title: 'PayPal के साथ सदस्यता लें',
+          description: 'PayPal की सुरक्षित सदस्यता प्रणाली का उपयोग करें। आपको अपनी $39/महीना सदस्यता की पुष्टि के लिए पुनर्निर्देशित किया जाएगा।',
+          button: 'PayPal से भुगतान करें'
+        },
+        option3: {
+          title: 'PIX भुगतान (केवल ब्राजील)',
+          description: 'Card Onramp का उपयोग करके PIX के माध्यम से भुगतान करें। यह तरीका केवल ब्राजील के उपयोगकर्ताओं के लिए उपलब्ध है।',
+          button: 'PIX से भुगतान करें (ब्राजील)'
+        },
+        mostPopular: 'सबसे लोकप्रिय'
+      },
+      recommended: 'अनुशंसित',
+      getStarted: 'शुरू करें'
+    }
   },
   fr: {
     // Navigation
@@ -842,30 +885,27 @@ export const translations = {
         weeklyRecommendations: 'Moyenne de 15 recommandations par semaine',
         successRate: '78% de taux de réussite',
         expertAnalysts: 'Analystes experts utilisant la technologie IA avancée',
-        learning: 'Apprentissage et conseils pour des paris intelligents'
+        learning: 'Apprentissage et conseils pour des paris intelligents',
+        paymentMethods: 'Nous acceptons Carte de Crédit, Google Pay, PayPal, PIX Brésil, Onramp (Nigeria, Ghana, Kenya), Optimoney (Nigeria, Kenya, Inde, Bangladesh)'
       },
-      plans: {
-        monthly: {
-          title: 'Plan Mensuel',
-          price: '$39',
-          period: '/mois',
-          description: 'Vous nous découvrez? Cool.\nCe plan vous donne un accès complet — sans engagement.',
-          recommended: false
+      paymentSection: {
+        title: 'Seulement $39/mois – Choisissez Votre Méthode de Paiement',
+        option1: {
+          title: 'Payez par Carte ou Méthodes Locales',
+          description: 'Cartes de crédit et Google Pay dans le monde entier, ou méthodes de paiement locales pour des pays spécifiques:\n• Onramp – Nigeria, Ghana, Kenya\n• Optimoney – Nigeria, Kenya, Inde, Bangladesh',
+          button: 'Continuer vers le Portail de Paiement'
         },
-        fourMonth: {
-          title: 'Plan 4 Mois',
-          price: '$32',
-          period: '/mois',
-          description: 'Les parieurs intelligents pensent à l\'avenir.\nCe plan vous engage et vous fait économiser de l\'argent — un choix évident si vous êtes là pour gagner.',
-          recommended: true
+        option2: {
+          title: 'Abonnez-vous avec PayPal',
+          description: 'Utilisez le système d\'abonnement sécurisé de PayPal. Vous serez redirigé pour confirmer votre abonnement de $39/mois.',
+          button: 'Payer avec PayPal'
         },
-        annual: {
-          title: 'Plan Annuel',
-          price: '$25',
-          period: '/mois',
-          description: 'Vous n\'êtes pas là pour jouer. Vous êtes là pour construire.\nC\'est notre plan complet pour ceux qui veulent un accès total, une cohérence totale et une confiance totale.',
-          recommended: false
-        }
+        option3: {
+          title: 'Paiement PIX (Brésil uniquement)',
+          description: 'Payez via PIX en utilisant Card Onramp. Cette méthode n\'est disponible que pour les utilisateurs au Brésil.',
+          button: 'Payer avec PIX (Brésil)'
+        },
+        mostPopular: 'Le Plus Populaire'
       },
       recommended: 'Recommandé',
       getStarted: 'Commencer'
