@@ -379,34 +379,35 @@ function JoinPage() {
         </Box>
 
         {/* Payment Methods Section */}
-        <Box sx={{ mt: 8, mb: 6 }}>
+        <Box sx={{ mt: { xs: 6, md: 8 }, mb: { xs: 4, md: 6 } }}>
           <Typography
             variant="h4"
             component="h2"
             sx={{
-              fontSize: { xs: '1.75rem', sm: '2rem', md: '2.25rem' },
+              fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2.25rem' },
               fontWeight: 700,
-              mb: 6,
+              mb: { xs: 4, md: 6 },
               textAlign: 'center',
               color: 'white',
               background: 'linear-gradient(45deg, #ffffff, #48CAE4)',
               WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
+              WebkitTextFillColor: 'transparent',
+              px: { xs: 2, sm: 0 }
             }}
           >
             {t('join.paymentSection.title')}
           </Typography>
 
-          <Grid container spacing={4} sx={{ maxWidth: 1200, mx: 'auto' }}>
+          <Grid container spacing={{ xs: 2, sm: 3, md: 4 }} sx={{ maxWidth: 1200, mx: 'auto', px: { xs: 1, sm: 0 } }}>
             {paymentMethods.map((method) => (
-              <Grid item xs={12} md={4} key={method.id}>
+              <Grid item xs={12} sm={6} md={4} key={method.id}>
                 <Box sx={{
                   position: 'relative',
                   height: '100%',
                   background: 'rgba(19, 47, 76, 0.8)',
-                  borderRadius: '20px',
+                  borderRadius: { xs: '16px', md: '20px' },
                   border: `2px solid ${method.borderColor}`,
-                  p: 4,
+                  p: { xs: 3, sm: 3.5, md: 4 },
                   transition: 'all 0.3s ease-in-out',
                   overflow: 'hidden',
                   '&::before': {
@@ -420,8 +421,8 @@ function JoinPage() {
                     zIndex: -1
                   },
                   '&:hover': {
-                    transform: 'translateY(-8px)',
-                    boxShadow: `0 12px 40px ${method.borderColor}`,
+                    transform: { xs: 'none', md: 'translateY(-8px)' },
+                    boxShadow: { xs: `0 4px 20px ${method.borderColor}`, md: `0 12px 40px ${method.borderColor}` },
                     border: `2px solid ${method.borderColor.replace('0.3', '0.6')}`,
                   }
                 }}>
@@ -429,14 +430,14 @@ function JoinPage() {
                   {method.badge && (
                     <Box sx={{
                       position: 'absolute',
-                      top: 16,
-                      right: 16,
+                      top: { xs: 12, md: 16 },
+                      right: { xs: 12, md: 16 },
                       background: 'linear-gradient(45deg, #FFD700, #FFA500)',
                       color: 'white',
-                      px: 2,
-                      py: 0.5,
+                      px: { xs: 1.5, md: 2 },
+                      py: { xs: 0.3, md: 0.5 },
                       borderRadius: '12px',
-                      fontSize: '0.75rem',
+                      fontSize: { xs: '0.7rem', md: '0.75rem' },
                       fontWeight: 600,
                       zIndex: 1
                     }}>
@@ -448,12 +449,12 @@ function JoinPage() {
                   <Box sx={{
                     display: 'flex',
                     justifyContent: 'center',
-                    mb: 3
+                    mb: { xs: 2, md: 3 }
                   }}>
                     <Box sx={{
-                      width: 64,
-                      height: 64,
-                      borderRadius: '16px',
+                      width: { xs: 56, md: 64 },
+                      height: { xs: 56, md: 64 },
+                      borderRadius: { xs: '14px', md: '16px' },
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -461,7 +462,7 @@ function JoinPage() {
                       backdropFilter: 'blur(10px)',
                       border: '1px solid rgba(255, 255, 255, 0.2)',
                       '& svg': {
-                        fontSize: '32px',
+                        fontSize: { xs: '28px', md: '32px' },
                         color: '#00B4D8'
                       }
                     }}>
@@ -476,9 +477,10 @@ function JoinPage() {
                     sx={{
                       color: 'white',
                       fontWeight: 700,
-                      mb: 2,
+                      mb: { xs: 1.5, md: 2 },
                       textAlign: 'center',
-                      fontSize: { xs: '1.1rem', sm: '1.25rem' }
+                      fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' },
+                      lineHeight: 1.3
                     }}
                   >
                     {method.title}
@@ -489,11 +491,11 @@ function JoinPage() {
                     variant="body1"
                     sx={{
                       color: 'rgba(255, 255, 255, 0.8)',
-                      mb: 4,
+                      mb: { xs: 3, md: 4 },
                       textAlign: 'center',
                       lineHeight: 1.6,
                       whiteSpace: 'pre-line',
-                      fontSize: { xs: '0.9rem', sm: '1rem' }
+                      fontSize: { xs: '0.85rem', sm: '0.9rem', md: '1rem' }
                     }}
                   >
                     {method.description}
@@ -510,11 +512,11 @@ function JoinPage() {
                       sx={{
                         background: method.buttonStyle,
                         color: 'white',
-                        px: 3,
-                        py: 1.5,
+                        px: { xs: 2, sm: 2.5, md: 3 },
+                        py: { xs: 1.2, md: 1.5 },
                         borderRadius: '12px',
                         fontWeight: 600,
-                        fontSize: { xs: '0.9rem', sm: '1rem' },
+                        fontSize: { xs: '0.85rem', sm: '0.9rem', md: '1rem' },
                         boxShadow: `0 4px 15px ${method.borderColor}`,
                         border: '1px solid rgba(255, 255, 255, 0.2)',
                         transition: 'all 0.3s ease',
@@ -522,7 +524,7 @@ function JoinPage() {
                         '&:hover': {
                           background: method.buttonStyle.replace('45deg', '225deg'),
                           boxShadow: `0 6px 20px ${method.borderColor}`,
-                          transform: 'translateY(-2px)',
+                          transform: { xs: 'none', md: 'translateY(-2px)' },
                         }
                       }}
                     >
